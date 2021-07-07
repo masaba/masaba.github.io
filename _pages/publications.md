@@ -19,16 +19,16 @@ decide what to do and whom to help.
 
 # Journal Publications 
 
-**Asaba, M.**, Chuey, A., & Gweon, H. (2021). Beyond knowledge vs. belief: The contents of mental-state representations and their underlying computations (Commentary on Philips et al. Knowledge before Belief). *Behavioral and Brain Sciences.*
+%**Asaba, M.**, Chuey, A., & Gweon, H. (2021). Beyond knowledge vs. belief: The contents of mental-state representations and their underlying computations (Commentary on Philips et al. Knowledge before Belief). *Behavioral and Brain Sciences.*
 
 **Asaba, M.**, Ong, D., & Gweon, H. (2019). Children integrate physical and social information to reason about the emotional consequences of others' expectations. *Developmental Psychology*. 
 *Co-first authorship
 
-Gweon, H., **Asaba, M.** (2018). Order matters: Children's evaluation of under-informative teachers depends on context. *Child Development*, 89(3), e278-e292. [PDF](../files/2018_gweon_asaba.pdf)
+%Gweon, H., **Asaba, M.** (2018). Order matters: Children's evaluation of under-informative teachers depends on context. *Child Development*, 89(3), e278-e292. [PDF](../files/2018_gweon_asaba.pdf)
 
 Koster-Hale, J.,  Richardson, H.,  Velez-Alicea, N., **Asaba, M.**, Young, L., & Saxe, R. (2017). Mentalizing regions represent distributed, continuous, and abstract dimensions of others' beliefs. *Neuroimage*, 161, 9-18. [PDF](../files/2017_koster-hale.pdf)
 
-# Conference Proceedings
+# Refereed Conference Proceedings
 
 **Asaba, M.***, Wu, Y., Carrillo, B.,  & Gweon, H. (2020).You're surprised at her success? Inferring competence from emotional responses to performance outcomes. *Proceedings of the 42nd Annual Conference of the Cognitive Science Society.* 
 
