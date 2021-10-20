@@ -5,7 +5,7 @@ permalink: /papers/
 author_profile: true
 ---
 
-**In prep** 
+**In Prep** 
 
 Gweon, H., **Asaba, M.**, Bennett-Pierre, G., & Jara-Ettinger, J. (in prep). An intuitive understanding of task difficulty in US and Tsimane' children.
 

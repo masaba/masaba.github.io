@@ -8,12 +8,8 @@ redirect_from:
   - /about.html
 ---
 
-Hello! I'm Mika. I am a cognitive scientist studying how children learn and communicate about the self to others.
+Hello there! I'm Mika (mee-kuh). I am a developmental cognitive scientist studying how children build self-representations through their social interactions, and the consequences of these processes on their behaviors and motivation. Basically, I want to know how children answer: Who am I, and who do you think I am?
 
-I'm a Ph.D student in the [Department of Psychology](https://psychology.stanford.edu/) at Stanford University. I primarily work with [Dr. Hyowon Gweon](https://web.stanford.edu/~hyo/Home.html) in the [Social Learning Lab](http://sll.stanford.edu/). Starting in Fall 2021, I will be a postdoc working with [Dr. Julia Leonard](https://jlnrd.github.io/) and [Dr. Julian Jara-Ettinger](https://compdevlab.yale.edu/) in Yale's Department of Psychology.
+I'm a Postdoctoral Associate in the Department of Psychology at Yale University working with [Julia Leonard](https://jlnrd.github.io/) and [Julian Jara-Ettinger](https://compdevlab.yale.edu/). I received my Ph.D in August 2021 in the Department of Psychology at Stanford University, where I primarily worked with [Hyowon Gweon](https://web.stanford.edu/~hyo/Home.html). Many years ago, I received my BA in [Neuroscience](https://www.wellesley.edu/neuroscience) from Wellesley College.
 
-I received my BA in [Neuroscience](https://www.wellesley.edu/neuroscience) from Wellesley College in 2014. During my undergraduate years, I was a research assistant in Dr. Rebecca Saxe's [Social Cognitive Neuroscience Lab](https://saxelab.mit.edu/), and Dr. Laura Schulz's [Early Childhood Cognition Lab](http://eccl.mit.edu/) at MIT.
-
-You can reach me at: masaba [at] stanford.edu. 
-
-And my name is pronounced like this: Mee-kuh Uh-saw-buh.
+You can reach me at: mika.asaba [at] yale.edu.
