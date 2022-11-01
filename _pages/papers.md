@@ -7,25 +7,23 @@ author_profile: true
 
 **In Prep** 
 
+**Asaba, M.**, Santos, M., Jara-Ettinger, J., \& Leonard, J. (in prep). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain.
+
 **Asaba, M.**, Wu, Y., Carrillo, B., & Gweon, H. (in prep). Inferring competence from emotional responses to performance outcomes. (Equal First Authors)
-
-**Asaba, M.**, Hembacher, E., Stegall, J., Frank, M., & Gweon, H. (in prep). Young children use statistical evidence to infer the informativeness of praise.
-
-Gweon, H., **Asaba, M.**, Bennett-Pierre, G., & Jara-Ettinger, J. (in prep). An intuitive understanding of task difficulty in US and Tsimane' children.
 
 Bennett-Pierre, G., **Asaba, M.**, & Gweon, H. (in prep). Young children consider expected task difficulty to decide what to do and whom to help.
 
-**Submitted & Under revision**
-
-**Asaba, M.**, Gweon, H. (under revision). Young children infer and manager what others think of the self. Proceedings of the National Academy of Sciences.
-
-**Asaba, M.**, Li, X., Yow, W. Q., & Gweon, H. (under revision). Four-year-olds strategically demonstrate their competence to a puppet but only when others treat it as an agent. Cognitive Development. (Equal First Authors)
+<!--**Submitted & Under revision**-->
 
 ---
 
 **Published**
 
-Chuey, A., **Asaba, M.**, Bridgers, S., Carrillo, B., Dietz, G., Garcia, T., Leonard, J., Liu, S., Merrick, M., Radwan, S., Stegall, J. Velez, N., Woo, B., Wu, Y., Zhao, X., Frank, M., Gweon, H. (in press). Examining the validity of online methods for developmental research. Frontiers Psychology.
+**Asaba, M.**, Gweon, H. (2022). Young children infer and manager what others think of the self. Proceedings of the National Academy of Sciences, 119(32), e2105642119.
+
+**Asaba, M.**, Li, X., Yow, W. Q., & Gweon, H. (2022). Four-year-olds strategically demonstrate their competence to a puppet but only when others treat it as an agent. Cognitive Development, 62, 101186. (*Equal First Authors)
+
+Chuey, A., **Asaba, M.**, Bridgers, S., Carrillo, B., Dietz, G., Garcia, T., Leonard, J., Liu, S., Merrick, M., Radwan, S., Stegall, J. Velez, N., Woo, B., Wu, Y., Zhao, X., Frank, M., Gweon, H. (2021). Examining the validity of online methods for developmental research. Frontiers Psychology.
 
 **Asaba, M.**, Chuey, A., Gweon, H. (2021). Beyond knowledge vs. belief: The contents of mental state representations and their underlying computations (*Commentary on Philips et al. Knowledge before Belief). Behavioral and Brain Sciences.
 
