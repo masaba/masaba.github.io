@@ -5,17 +5,17 @@ permalink: /papers/
 author_profile: true
 ---
 
-**In Prep** 
+### **In Prep** 
 
 **Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (in prep). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain.
 
 Bennett-Pierre, G., **Asaba, M.**, & Gweon, H. (in prep). Young children consider expected task difficulty to decide what to do and whom to help.
 
-**Submitted & Under revision**
+### **Submitted & Under revision**
 
 **Asaba, M.**, Wu, Y., Carrillo, B., & Gweon, H. (under review). Inferring competence from emotional responses to performance outcomes. (Equal First Authors)
 
-**Published**
+### **Published**
 
 **Asaba, M.**, Gweon, H. (2022). Young children infer and manager what others think of the self. Proceedings of the National Academy of Sciences, 119(32), e2105642119.
 
