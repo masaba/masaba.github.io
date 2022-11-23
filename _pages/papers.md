@@ -7,7 +7,7 @@ author_profile: true
 
 **In Prep** 
 
-**Asaba, M.**, Santos, M., Jara-Ettinger, J., \& Leonard, J. (in prep). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain.
+**Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (in prep). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain.
 
 Bennett-Pierre, G., **Asaba, M.**, & Gweon, H. (in prep). Young children consider expected task difficulty to decide what to do and whom to help.
 
@@ -20,6 +20,8 @@ Bennett-Pierre, G., **Asaba, M.**, & Gweon, H. (in prep). Young children conside
 **Asaba, M.**, Gweon, H. (2022). Young children infer and manager what others think of the self. Proceedings of the National Academy of Sciences, 119(32), e2105642119.
 
 **Asaba, M.**, Li, X., Yow, W. Q., & Gweon, H. (2022). Four-year-olds strategically demonstrate their competence to a puppet but only when others treat it as an agent. Cognitive Development, 62, 101186. (*Equal First Authors)
+
+**Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (2022). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain. Proceedings of the 44th Annual Conference of the Cognitive Science Society.
 
 Chuey, A., **Asaba, M.**, Bridgers, S., Carrillo, B., Dietz, G., Garcia, T., Leonard, J., Liu, S., Merrick, M., Radwan, S., Stegall, J. Velez, N., Woo, B., Wu, Y., Zhao, X., Frank, M., Gweon, H. (2021). Examining the validity of online methods for developmental research. Frontiers Psychology.
 
