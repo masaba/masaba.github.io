@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Hi there! I'm a postdoctoral researcher at Yale University.
+Hi! I'm a postdoctoral researcher at Yale University.
 
 In my research, I leverage a diverse range of methods––including surveys, behavioral studies, and computational modeling––to understand the psychological mechanisms that shape learning outcomes and motivation. To that end, my research primarily takes a developmental approach, focusing on early childhood through adolescence.
 
