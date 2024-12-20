@@ -5,7 +5,7 @@ permalink: /research/
 author_profile: true
 ---
 
-# Whose encouragement do students find motivating?
+## Whose encouragement do students find motivating?
 
 Parents and teachers often provide feedback to motivate students, but it is not always effective. To understand why, my collaborators and I applied for and received $40,000 from the [Character Lab Research Network](https://characterlab.org/) to conduct independent research with adolescents. We designed and administered surveys to over 1,500 students across the United States. The research found that middle and high school students, who are in the midst of making important academic decisions, are most likely to seek out and be motivated by encouragement from people who both know their abilities and the task at hand well. Simply put, students do not trust encouragement from just anyone—they evaluate it based on who provides it to them and what they know.
 
