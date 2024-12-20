@@ -13,7 +13,7 @@ Our findings suggest that for encouragement to be most effective, it is critical
 
 <div style="float: right; width: 50%; margin-left: 15px;">
 
-  <img src="/assets/images/whim_tile.png" alt="Study Visualization">
+  <img src="/assets/images/whim_tile.png" alt="Whim Visualization" class="image-right">>
 </div>
 
 <!--
