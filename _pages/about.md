@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Mika Asaba"
+title: "Mika Asaba, PhD"
 excerpt: "About me"
 author_profile: true
 redirect_from: 
@@ -8,8 +8,10 @@ redirect_from:
   - /about.html
 ---
 
-Hello there! I'm Mika. I'm a developmental psychologist curious about how children learn about the social world. In particular, much of my research has focused on how children build representations of individuals (including themselves) and social groups (including their own). What I am most excited about is how these representations shape real-world behaviors and outcomes, e.g., in educational contexts.
+Hi there! I'm a postdoctoral researcher at Yale University.
 
-I am currently an NSF-funded postdoctoral fellow in the Department of Psychology at Yale University working with [Julia Leonard](https://jlnrd.github.io/) and [Julian Jara-Ettinger](https://compdevlab.yale.edu/). I received my Ph.D in August 2021 in the Department of Psychology at Stanford University, where I primarily worked with [Hyowon Gweon](https://web.stanford.edu/~hyo/Home.html). Many years ago, I received my BA in [Neuroscience](https://www.wellesley.edu/neuroscience) from Wellesley College.
+In my research, I leverage a diverse range of methods––including surveys, behavioral studies, and computational modeling––to understand the psychological mechanisms that shape learning outcomes and motivation. To that end, my research primarily takes a developmental approach, focusing on early childhood through adolescence.
+
+I completed my PhD in Psychology at Stanford University. I have received funding from the National Science Foundation to conduct independent doctoral and postdocoral research.
 
 You can reach me at: mika.asaba [at] yale.edu.
