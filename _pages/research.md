@@ -11,10 +11,23 @@ Parents and teachers often provide feedback to motivate students, but it is not 
 
 Our findings suggest that for encouragement to be most effective, it is critical that students have people in their lives who know them and their activities well. By fostering connections between students and these highly knowledgeable mentors, schools and programs can significantly boost academic motivation and persistence. This can ensure that adolescents feel supported and understood in their educational journeys.
 
+<!--
 <div style="float: right; width: 50%; margin-left: 15px;">
-
   <img src="/assets/images/whim_tile.png" alt="Whim Visualization" class="image-right">>
 </div>
+-->
+
+This work was presented at the *Annual Conference for the Cognitive Science Society* and *published in Developmental Psychology*. Link to paper: [https://osf.io/preprints/psyarxiv/mg5ws](https://osf.io/preprints/psyarxiv/mg5ws)
+
+## How do children decide what to communicate about their abilities?
+
+Questions about the self are central in our lives: Who am I? Can I do this? Just as common, yet arguably more preoccupying, are questions about the self in the eyes of others: Who do you think I am? Do you think I can do this? While these thoughts might come naturally to adults, what underlies them is a remarkable cognitive feat: the ability to reason about what others think of the self. Through four carefully designed experiments, we examined how 3- and 4-year-olds make decisions about what to communicate and to whom, based on others' observations of their performance. The study finds that children strategically present information to revise others' outdated or negative impressions, highlighting an early sophistication in self-presentation and reputation management.
+
+These findings bridge developmental research on theory of mind, communication, and reputation, showing that even preschool-aged children can engage in nuanced reasoning about others' mental states. The results have broad implications for understanding how early social interactions contribute to the development of children's understanding of themselves.
+
+Link to paper: [https://doi.org/10.1073/pnas.2105642119](https://doi.org/10.1073/pnas.2105642119)
+
+## 
 
 <!--
 Children are deeply curious. They are eager to learn not only about the physical world, but also about the social world–––about themselves, others, and social groups. What they learn about themselves and others can have important consequences on their social interactions, academic decisions and outcomes, and even mental health. What are the cognitive processes that support learning about the self and others, and how do they develop early in life?
