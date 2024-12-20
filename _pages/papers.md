@@ -22,21 +22,21 @@ author_profile: true
 
 **Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (accepted). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain. *Developmental Psychology.*
 
-- Shachnai, R., **Asaba, M.**, Hu, L., & Leonard, J. (2024). Pointing out learning opportunities reduces over-parenting. *Child Development.* Advance online publication. [https://doi.org/10.1111/cdev.14198](https://doi.org/10.1111/cdev.14198)
+Shachnai, R., **Asaba, M.**, Hu, L., & Leonard, J. (2024). Pointing out learning opportunities reduces over-parenting. *Child Development.* Advance online publication. [https://doi.org/10.1111/cdev.14198](https://doi.org/10.1111/cdev.14198)
 
-- **Asaba, M.** & Gweon, H. (2022). Young children infer and manage what others think about them. *Proceedings of the National Academy of Sciences*, 119(32), e2105642119. [https://doi.org/10.1073/pnas.2105642119](https://doi.org/10.1073/pnas.2105642119)
+**Asaba, M.** & Gweon, H. (2022). Young children infer and manage what others think about them. *Proceedings of the National Academy of Sciences*, 119(32), e2105642119. [https://doi.org/10.1073/pnas.2105642119](https://doi.org/10.1073/pnas.2105642119)
 
-- **Asaba, M.**\*, Li, X.\*, Yow, W. Q., & Gweon, H. (2022). Children selectively demonstrate their competence to a puppet when others depict it as an agent. *Cognitive Development*, 62, 101186. [https://doi.org/10.1016/j.cogdev.2022.101186](https://doi.org/10.1016/j.cogdev.2022.101186)
+**Asaba, M.**\*, Li, X.\*, Yow, W. Q., & Gweon, H. (2022). Children selectively demonstrate their competence to a puppet when others depict it as an agent. *Cognitive Development*, 62, 101186. [https://doi.org/10.1016/j.cogdev.2022.101186](https://doi.org/10.1016/j.cogdev.2022.101186)
 
-- **Asaba, M.**, Chuey, A., & Gweon, H. (2021). Beyond knowledge vs. belief: The contents of mental-state representations and their underlying computations (*Commentary on Philips et al. Knowledge before Belief*). *Behavioral and Brain Sciences*, 44, e141. [https://doi.org/10.1017/S0140525X20000618](https://doi.org/10.1017/S0140525X20000618)
+**Asaba, M.**, Chuey, A., & Gweon, H. (2021). Beyond knowledge vs. belief: The contents of mental-state representations and their underlying computations (*Commentary on Philips et al. Knowledge before Belief*). *Behavioral and Brain Sciences*, 44, e141. [https://doi.org/10.1017/S0140525X20000618](https://doi.org/10.1017/S0140525X20000618)
 
-- Chuey, A., **Asaba, M.**, Bridgers, S., Carrillo, B., Dietz, G., Garcia, T., Leonard, J., Liu, S., Merrick, M., Radwan, S., Stegall, J., Velez, N., Woo, B., Wu, Y., Zhao, X., Frank, M., & Gweon, H. (2021). Moderated online data-collection for developmental research: methods and replications. *Frontiers in Psychology*, 12, 4968. [https://doi.org/10.3389/fpsyg.2021.734398](https://doi.org/10.3389/fpsyg.2021.734398)
+Chuey, A., **Asaba, M.**, Bridgers, S., Carrillo, B., Dietz, G., Garcia, T., Leonard, J., Liu, S., Merrick, M., Radwan, S., Stegall, J., Velez, N., Woo, B., Wu, Y., Zhao, X., Frank, M., & Gweon, H. (2021). Moderated online data-collection for developmental research: methods and replications. *Frontiers in Psychology*, 12, 4968. [https://doi.org/10.3389/fpsyg.2021.734398](https://doi.org/10.3389/fpsyg.2021.734398)
 
-- **Asaba, M.**\*, Ong, D.\*, & Gweon, H. (2019). Children integrate physical and social information to reason about the emotional consequences of others' expectations. *Developmental Psychology*, 55(8), 1680-1693. [https://doi.org/10.1037/dev0000749](https://doi.org/10.1037/dev0000749)
+**Asaba, M.**\*, Ong, D.\*, & Gweon, H. (2019). Children integrate physical and social information to reason about the emotional consequences of others' expectations. *Developmental Psychology*, 55(8), 1680-1693. [https://doi.org/10.1037/dev0000749](https://doi.org/10.1037/dev0000749)
 
-- Gweon, H., & **Asaba, M.** (2018). Order matters: Children's evaluation of under-informative teachers depends on context. *Child Development*, 89(3), e278-e292. [https://doi.org/10.1111/cdev.12825](https://doi.org/10.1111/cdev.12825)
+Gweon, H., & **Asaba, M.** (2018). Order matters: Children's evaluation of under-informative teachers depends on context. *Child Development*, 89(3), e278-e292. [https://doi.org/10.1111/cdev.12825](https://doi.org/10.1111/cdev.12825)
 
-- Koster-Hale, J., Richardson, H., Velez-Alicea, N., **Asaba, M.**, Young, L., & Saxe, R. (2017). Mentalizing regions represent distributed, continuous, and abstract dimensions of others' beliefs. *NeuroImage*, 161, 9-18. [https://doi.org/10.1016/j.neuroimage.2017.08.026](https://doi.org/10.1016/j.neuroimage.2017.08.026)
+Koster-Hale, J., Richardson, H., Velez-Alicea, N., **Asaba, M.**, Young, L., & Saxe, R. (2017). Mentalizing regions represent distributed, continuous, and abstract dimensions of others' beliefs. *NeuroImage*, 161, 9-18. [https://doi.org/10.1016/j.neuroimage.2017.08.026](https://doi.org/10.1016/j.neuroimage.2017.08.026)
 
 ### **REFEREED CONFERENCE PROCEEDING PAPERS**
 
