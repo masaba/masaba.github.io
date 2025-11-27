@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Mika Asaba, PhD"
+title: "Hi! I'm Mika"
 excerpt: "About me"
 author_profile: true
 redirect_from: 
@@ -8,10 +8,12 @@ redirect_from:
   - /about.html
 ---
 
-Hi! I'm a postdoctoral researcher at Yale University.
+I'm a developmental and learning scientist. I lead [Tangle & Thrive](https://www.teachinglabstudio.com/blog/introducing-tangle-thrive), a project within Teaching Lab Studio focused on designing and testing ways generative AI can meaningfully support student engagement, motivation, and learning.
 
-In my research, I leverage a diverse range of methods––including surveys, behavioral studies, and computational modeling––to understand the psychological mechanisms that shape learning outcomes and motivation. To that end, my research primarily takes a developmental approach, focusing on early childhood through adolescence.
+My work integrates surveys, behavioral experiments, collaborative design partnerships with teachers and students, and computational methods to understand the psychological mechanisms that shape learning outcomes.
 
-I completed my PhD in Psychology at Stanford University. I have received funding from the National Science Foundation to conduct independent doctoral and postdocoral research.
+I come from a background in cognitive science, where I studied how the building blocks of children’s social cognition—such as their perspective-taking abilities—shape how they learn about themselves and relate to others. My current work extends this foundation into applied behavioral science: How can we design environments, tools, and interactions that genuinely shift students’ behavior and help them engage more in school?
 
-You can reach me at: mika.asaba [at] yale.edu.
+I completed my PhD in Psychology at Stanford University and have received funding from the National Science Foundation to conduct independent doctoral and postdoctoral research.
+
+You can reach me at: mika.asaba [at] teachinglabstudio.com
