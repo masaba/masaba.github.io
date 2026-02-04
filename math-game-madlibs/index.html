@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game Mad Libs!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Bangers&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Patrick Hand', cursive;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.8s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        .container { max-width: 750px; margin: 0 auto; position: relative; z-index: 10; }
+
+        .screen { display: none; text-align: center; }
+        .screen.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Title Styles */
+        .title {
+            font-family: 'Bangers', cursive;
+            font-size: 4em;
+            line-height: 1;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+        .title .word1 { color: #ff6b6b; text-shadow: 4px 4px 0 #ffd93d, 6px 6px 0 #333; }
+        .title .word2 { color: #4ecdc4; text-shadow: 4px 4px 0 #6bcb77, 6px 6px 0 #333; }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: white;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border: 4px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            font-family: 'Bangers', cursive;
+            font-size: 1.6em;
+            color: #6bcb77;
+            margin-bottom: 15px;
+        }
+
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #333;
+            text-align: left;
+        }
+        .tip strong { color: #ff6b6b; }
+
+        /* Buttons */
+        .btn {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5em;
+            background: #ff6b6b;
+            color: white;
+            border: 4px solid #333;
+            padding: 14px 40px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0 #333;
+            transition: all 0.15s;
+            letter-spacing: 2px;
+            display: inline-block;
+            margin: 5px;
+        }
+        .btn:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #333; }
+        .btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 3px 3px 0 #333; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-start { font-size: 2em; background: linear-gradient(135deg, #6bcb77, #4ecdc4); }
+        .btn-green { background: #6bcb77; }
+        .btn-blue { background: #4ecdc4; }
+        .btn-purple { background: #764ba2; }
+        .btn-small { font-size: 1.1em; padding: 10px 20px; }
+
+        /* Question Card */
+        .question-card {
+            background: white;
+            border: 4px solid #333;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.15);
+            animation: popIn 0.35s ease;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            70% { transform: scale(1.02); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .round-badge {
+            display: inline-block;
+            font-family: 'Bangers', cursive;
+            padding: 6px 18px;
+            border-radius: 25px;
+            margin-bottom: 15px;
+            color: white;
+        }
+        .round-badge.r1 { background: linear-gradient(135deg, #6bcb77, #4ecdc4); }
+        .round-badge.r2 { background: linear-gradient(135deg, #4ecdc4, #54a0ff); }
+        .round-badge.r3 { background: linear-gradient(135deg, #ff6b6b, #ff9ff3); }
+
+        .progress-bar {
+            background: #e8e8e8;
+            border-radius: 25px;
+            height: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 3px solid #333;
+        }
+        .progress-fill { height: 100%; transition: width 0.4s ease; border-radius: 25px; }
+        .r1 .progress-fill { background: linear-gradient(90deg, #6bcb77, #4ecdc4); }
+        .r2 .progress-fill { background: linear-gradient(90deg, #4ecdc4, #54a0ff); }
+        .r3 .progress-fill { background: linear-gradient(90deg, #ff6b6b, #ff9ff3); }
+
+        .question-label {
+            font-size: 1.6em;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .question-hint {
+            font-size: 1em;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.6em;
+            border: none;
+            border-bottom: 4px dashed #4ecdc4;
+            background: transparent;
+            color: #ff6b6b;
+            text-align: center;
+            outline: none;
+        }
+        .text-input:focus { border-bottom-style: solid; border-bottom-color: #ff6b6b; }
+
+        .ideas-btn {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.1em;
+            background: #f8f8f8;
+            color: #666;
+            border: 2px dashed #ccc;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .ideas-btn:hover { background: #fff3cd; border-color: #ffd93d; }
+
+        .suggestions {
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .suggestions.visible { display: flex; }
+        .suggestion {
+            background: #f0f0f0;
+            padding: 6px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .suggestion:hover { background: #ffd93d; transform: scale(1.05); }
+
+        /* Wheel Spinner */
+        .wheel-container {
+            position: relative;
+            margin: 20px auto;
+        }
+        .wheel {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 6px solid #333;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #333;
+            z-index: 10;
+        }
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            z-index: 5;
+        }
+        .wheel-result {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5em;
+            color: #ff6b6b;
+            margin-top: 15px;
+            min-height: 1.5em;
+        }
+
+        /* Slot Machine */
+        .slot-machine {
+            background: linear-gradient(180deg, #333, #555);
+            border-radius: 15px;
+            padding: 20px;
+            display: inline-block;
+            margin: 20px auto;
+            border: 4px solid #ffd93d;
+        }
+        .slot-reels {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .slot-reel {
+            width: 80px;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: bold;
+            overflow: hidden;
+            border: 3px solid #333;
+        }
+        .slot-reel.spinning {
+            animation: slotSpin 0.1s linear infinite;
+        }
+        @keyframes slotSpin {
+            0% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(-5px); }
+        }
+        .slot-result {
+            font-family: 'Bangers', cursive;
+            font-size: 1.3em;
+            color: #ffd93d;
+            margin-top: 15px;
+        }
+
+        /* Random Generator */
+        .generator-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px auto;
+            max-width: 350px;
+        }
+        .generator-result {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.4em;
+            color: #333;
+            margin-top: 15px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .generator-result.spinning {
+            animation: pulse 0.2s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Story Display */
+        .story-card {
+            background: #fffef0;
+            border: 4px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+        }
+        .story-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5em;
+            color: #6bcb77;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .story-text {
+            font-size: 1.25em;
+            line-height: 1.8;
+            color: #333;
+        }
+        .filled-word {
+            font-family: 'Bangers', cursive;
+            color: #ff6b6b;
+            background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+        /* Prompts Display */
+        .prompts-container {
+            display: grid;
+            gap: 20px;
+        }
+        .prompt-card {
+            background: white;
+            border: 4px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: left;
+        }
+        .prompt-header {
+            font-family: 'Bangers', cursive;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed #eee;
+        }
+        .prompt-header.p1 { color: #6bcb77; }
+        .prompt-header.p2 { color: #4ecdc4; }
+        .prompt-header.p3 { color: #ff6b6b; }
+        .prompt-text {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        .copy-success {
+            color: #6bcb77;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title { font-size: 2.8em; }
+            .wheel { width: 200px; height: 200px; }
+            .slot-reel { width: 60px; height: 50px; font-size: 0.8em; }
+        }
+
+        /* Animations */
+        .wiggle { display: inline-block; animation: wiggle 0.6s ease-in-out infinite; }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== START SCREEN ===== -->
+        <div class="screen active" id="startScreen">
+            <h1 class="title"><span class="word1">MAD</span> <span class="word2">LIBS!</span></h1>
+            <p class="subtitle">Learn to talk to AI like a pro! <span class="wiggle">🤖</span></p>
+
+            <div class="card">
+                <h3>🎯 HOW TO PLAY</h3>
+                <div class="tip"><span>🙈</span><span><strong>DON'T peek ahead!</strong> That ruins the fun!</span></div>
+                <div class="tip"><span>✨</span><span><strong>Be SPECIFIC!</strong> Say "sparkly unicorn" not just "animal"</span></div>
+                <div class="tip"><span>💭</span><span><strong>First thought = best thought!</strong> Don't overthink it!</span></div>
+                <div class="tip"><span>🎢</span><span><strong>3 rounds</strong> of increasing creativity!</span></div>
+                <div class="tip"><span>🚀</span><span><strong>Turn your stories</strong> into REAL game prompts!</span></div>
+            </div>
+
+            <button class="btn btn-start" onclick="startGame()">LET'S GO! 🚀</button>
+        </div>
+
+        <!-- ===== QUESTION SCREEN ===== -->
+        <div class="screen" id="questionScreen">
+            <div class="question-card" id="questionCard">
+                <span class="round-badge r1" id="roundBadge">ROUND 1</span>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+                <div id="questionContent">
+                    <!-- Dynamic content goes here -->
+                </div>
+
+                <button class="btn" id="nextBtn" onclick="nextQuestion()">NEXT →</button>
+            </div>
+        </div>
+
+        <!-- ===== STORY SCREENS ===== -->
+        <div class="screen" id="story1Screen">
+            <h2 class="title" style="font-size:2.5em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">📖 Your Story So Far!</h2>
+            <div class="story-card">
+                <div class="story-title">Read your Mad Libs story:</div>
+                <div class="story-text" id="story1Text"></div>
+            </div>
+            <button class="btn btn-green" onclick="startRound(2)">Nice! Now let's add challenges... ⚡</button>
+        </div>
+
+        <div class="screen" id="story2Screen">
+            <h2 class="title" style="font-size:2.5em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">⚡ Challenges Added!</h2>
+            <div class="story-card">
+                <div class="story-title">See how challenges changed your story:</div>
+                <div class="story-text" id="story2Text"></div>
+            </div>
+            <button class="btn btn-blue" onclick="startRound(3)">Awesome! One more round - let's get CRAZY! 🎪</button>
+        </div>
+
+        <div class="screen" id="story3Screen">
+            <h2 class="title" style="font-size:2.5em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">🎪 CHAOS MODE!</h2>
+            <div class="story-card">
+                <div class="story-title">Read the CRAZY final version:</div>
+                <div class="story-text" id="story3Text"></div>
+            </div>
+            <button class="btn btn-purple" onclick="showPrompts()">Now let's turn these into REAL prompts! 🚀</button>
+        </div>
+
+        <!-- ===== FINAL PROMPTS SCREEN ===== -->
+        <div class="screen" id="promptsScreen">
+            <h2 class="title" style="font-size:2.2em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">🎮 YOUR THREE GAME PROMPTS!</h2>
+            <p class="subtitle">See How Each Round Created a Different Game!</p>
+
+            <div class="prompts-container">
+                <div class="prompt-card">
+                    <div class="prompt-header p1">📗 PROMPT 1: The Basic Game</div>
+                    <div class="prompt-text" id="prompt1Text"></div>
+                    <button class="btn btn-small btn-green" onclick="copyPrompt(1)">Copy Prompt 1 📋</button>
+                    <div class="copy-success" id="copy1"></div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header p2">📘 PROMPT 2: With Challenges</div>
+                    <div class="prompt-text" id="prompt2Text"></div>
+                    <button class="btn btn-small btn-blue" onclick="copyPrompt(2)">Copy Prompt 2 📋</button>
+                    <div class="copy-success" id="copy2"></div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header p3">📕 PROMPT 3: Full Chaos Mode</div>
+                    <div class="prompt-text" id="prompt3Text"></div>
+                    <button class="btn btn-small" onclick="copyPrompt(3)">Copy Prompt 3 📋</button>
+                    <div class="copy-success" id="copy3"></div>
+                </div>
+            </div>
+
+            <div class="final-message">
+                <strong>See the difference?</strong> Each round made the game more detailed and interesting!<br>
+                Pick your favorite prompt and paste it into Lovable.ai to build your game!
+            </div>
+
+            <button class="btn btn-purple" onclick="window.open('https://lovable.dev', '_blank')">Open Lovable.dev 🚀</button>
+            <button class="btn btn-green" onclick="downloadPrompts()">Download All 3 📥</button>
+            <button class="btn btn-blue" onclick="resetGame()">Start Over 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== GAME DATA =====
+        const round1Questions = [
+            { id: 'place', label: 'A funny place for your adventure', hint: 'This sets the theme!', suggestions: ['space station', 'underwater castle', 'pizza planet', 'haunted library', 'candy factory'] },
+            { id: 'adjective1', label: 'A silly adjective', hint: 'Describe something funny!', suggestions: ['sparkly', 'wiggly', 'cosmic', 'bubbly', 'giggly'] },
+            { id: 'mathTopic', label: 'A math topic you\'re working on', hint: 'Be honest!', suggestions: ['fractions', 'long division', 'decimals', 'word problems'] },
+            { id: 'object', label: 'A weird object', hint: 'The stranger the better!', suggestions: ['rubber duck', 'disco ball', 'giant sock', 'magic pencil'] },
+            { id: 'feeling', label: 'How you feel about math this week', hint: 'Any feeling!', suggestions: ['curious', 'determined', 'excited', 'puzzled'] },
+            { id: 'animal', label: 'A type of animal', hint: 'Real or imaginary!', suggestions: ['penguin', 'dragon', 'unicorn', 'robot dog'] },
+            { id: 'mathLove', label: 'A math topic you secretly love', hint: 'Or don\'t mind!', suggestions: ['patterns', 'geometry', 'puzzles', 'multiplication'] },
+            { id: 'bigNumber', label: 'A HUGE number', hint: 'Go big!', suggestions: ['9,999', 'one million', 'a billion', 'infinity'] },
+            { id: 'reward', label: 'A reward that motivates you', hint: 'What makes you try harder?', suggestions: ['pizza party', 'extra recess', 'video games', 'ice cream'] },
+            { id: 'adjective2', label: 'Another silly adjective', hint: 'Different from before!', suggestions: ['fuzzy', 'bouncy', 'glittery', 'squishy'] },
+            { id: 'sound', label: 'A sound effect', hint: 'Make noise!', suggestions: ['BEEP BOOP!', 'WHOOSH!', 'KA-CHING!', 'SPLAT!'] },
+            { id: 'encourage', label: 'What you\'d say to encourage a friend', hint: 'Be supportive!', suggestions: ['You got this!', 'Keep trying!', 'Almost there!'] },
+            { id: 'charName', label: 'Your character\'s name', hint: 'Make it fun!', suggestions: ['Professor Penguin', 'Captain Calculator', 'Math Ninja'] },
+            { id: 'verb', label: 'A verb ending in -ing', hint: 'An action!', suggestions: ['dancing', 'zooming', 'bouncing', 'spinning'] }
+        ];
+
+        const wheelOptions = {
+            challenge: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
+            failure: ['Start Over', 'Lose Points', 'Silly Animation', 'Try Again', 'Mini Penalty', 'Funny Sound'],
+            winCondition: ['Collect 100 Items', 'Make Teacher Laugh', 'Solve the Riddle', 'Find the Key', 'Beat High Score', 'Help a Friend']
+        };
+
+        const generatorOptions = {
+            powerup: ['Hint Coin', 'Time Freeze', 'Skip Button', 'Double Points', 'Shield', 'Extra Life'],
+            bonus: ['Secret Level', 'Multiplayer Mode', 'Leaderboard', 'Achievements', 'Custom Skins', 'Sound Effects'],
+            chaos: ['Rainbow explosions', 'Characters swap costumes', 'Upside-down mode', 'Everything glows', 'Confetti everywhere', 'Slow motion'],
+            megaBonus: ['Dance mode', 'Confetti everywhere', 'Secret codes', 'Time travel', 'Magic portal', 'Disco lights']
+        };
+
+        const slotReels = [
+            ['Everything is', 'Players must', 'The world is', 'Numbers are'],
+            ['backwards', 'upside-down', 'in slow-mo', 'super fast'],
+            ['now!', 'mode!', 'activated!', 'engaged!']
+        ];
+
+        let currentRound = 1;
+        let currentQuestion = 0;
+        let answers = {};
+        let round2Data = {};
+        let round3Data = {};
+
+        // ===== NAVIGATION =====
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startGame() {
+            currentRound = 1;
+            currentQuestion = 0;
+            answers = {};
+            round2Data = {};
+            round3Data = {};
+            showScreen('questionScreen');
+            renderQuestion();
+        }
+
+        function startRound(round) {
+            currentRound = round;
+            currentQuestion = 0;
+            showScreen('questionScreen');
+            renderQuestion();
+        }
+
+        function resetGame() {
+            showScreen('startScreen');
+        }
+
+        // ===== ROUND 1: TEXT INPUTS =====
+        function renderQuestion() {
+            const card = document.getElementById('questionCard');
+            const badge = document.getElementById('roundBadge');
+            const content = document.getElementById('questionContent');
+            const nextBtn = document.getElementById('nextBtn');
+
+            badge.className = 'round-badge r' + currentRound;
+            badge.textContent = 'ROUND ' + currentRound;
+            card.className = 'question-card r' + currentRound;
+
+            if (currentRound === 1) {
+                renderRound1Question(content);
+            } else if (currentRound === 2) {
+                renderRound2Question(content);
+            } else {
+                renderRound3Question(content);
+            }
+
+            card.style.animation = 'none';
+            card.offsetHeight;
+            card.style.animation = 'popIn 0.35s ease';
+        }
+
+        function renderRound1Question(content) {
+            const q = round1Questions[currentQuestion];
+            const progress = ((currentQuestion) / round1Questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            content.innerHTML = `
+                <div class="question-label">${currentQuestion + 1}. ${q.label}</div>
+                <div class="question-hint">${q.hint}</div>
+                <input type="text" class="text-input" id="textInput" placeholder="type here..." autocomplete="off">
+                <div>
+                    <button class="ideas-btn" id="ideasBtn" onclick="showIdeas()">Need ideas? 💡</button>
+                    <div class="suggestions" id="suggestions">
+                        ${q.suggestions.map(s => `<span class="suggestion" onclick="useSuggestion('${s}')">${s}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            const input = document.getElementById('textInput');
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = true;
+            nextBtn.textContent = currentQuestion === round1Questions.length - 1 ? 'SEE YOUR STORY! 📖' : 'NEXT →';
+
+            input.addEventListener('input', () => { nextBtn.disabled = !input.value.trim(); });
+            input.addEventListener('keypress', (e) => { if (e.key === 'Enter' && input.value.trim()) nextQuestion(); });
+            input.focus();
+        }
+
+        function showIdeas() {
+            document.getElementById('ideasBtn').style.display = 'none';
+            document.getElementById('suggestions').classList.add('visible');
+        }
+
+        function useSuggestion(text) {
+            document.getElementById('textInput').value = text;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        // ===== ROUND 2: MIXED INPUTS =====
+        const round2Steps = [
+            { type: 'wheel', id: 'challenge', label: 'Spin for your challenge type!', options: 'challenge' },
+            { type: 'text', id: 'challengeDesc', label: 'What specifically happens in this challenge?', hint: 'Describe how it works!' },
+            { type: 'generator', id: 'powerup', label: 'Generate your power-up!', options: 'powerup' },
+            { type: 'text', id: 'powerupDesc', label: 'How does this power-up help you?', hint: 'What does it do?' },
+            { type: 'wheel', id: 'failure', label: 'Spin for what happens when you fail!', options: 'failure' },
+            { type: 'generator', id: 'bonus', label: 'Get a surprise bonus feature!', options: 'bonus' }
+        ];
+
+        function renderRound2Question(content) {
+            const step = round2Steps[currentQuestion];
+            const progress = ((currentQuestion) / round2Steps.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('nextBtn').textContent = currentQuestion === round2Steps.length - 1 ? 'SEE YOUR STORY! 📖' : 'NEXT →';
+            document.getElementById('nextBtn').disabled = true;
+
+            if (step.type === 'wheel') {
+                renderWheel(content, step);
+            } else if (step.type === 'generator') {
+                renderGenerator(content, step);
+            } else {
+                renderTextInput(content, step);
+            }
+        }
+
+        function renderWheel(content, step) {
+            const options = wheelOptions[step.options];
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4ecdc4', '#54a0ff', '#ff9ff3'];
+
+            content.innerHTML = `
+                <div class="question-label">${step.label}</div>
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="wheel">
+                        ${options.map((opt, i) => {
+                            const angle = (i * 60) - 60;
+                            return `<div class="wheel-segment" style="transform: rotate(${angle}deg) skewY(-30deg); background: ${colors[i]};">
+                                <span style="transform: skewY(30deg) rotate(30deg);">${opt}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    <div class="wheel-center"></div>
+                </div>
+                <button class="btn btn-small btn-purple" onclick="spinWheel('${step.id}', '${step.options}')">SPIN! 🎡</button>
+                <div class="wheel-result" id="wheelResult"></div>
+            `;
+        }
+
+        function spinWheel(id, optionsKey) {
+            const wheel = document.getElementById('wheel');
+            const options = wheelOptions[optionsKey];
+            const randomIndex = Math.floor(Math.random() * options.length);
+            const rotation = 1440 + (randomIndex * 60) + 30; // Multiple spins + land on segment
+
+            wheel.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(() => {
+                const result = options[randomIndex];
+                document.getElementById('wheelResult').textContent = '🎉 ' + result + '!';
+                round2Data[id] = result;
+                document.getElementById('nextBtn').disabled = false;
+            }, 3000);
+        }
+
+        function renderGenerator(content, step) {
+            content.innerHTML = `
+                <div class="question-label">${step.label}</div>
+                <div class="generator-box">
+                    <button class="btn btn-small" onclick="generate('${step.id}', '${step.options}')">
+                        ${step.options === 'powerup' ? 'Generate Power-up! ⚡' : 'Surprise Me! 🎁'}
+                    </button>
+                    <div class="generator-result" id="genResult">???</div>
+                </div>
+            `;
+        }
+
+        function generate(id, optionsKey) {
+            const options = generatorOptions[optionsKey];
+            const result = document.getElementById('genResult');
+            result.classList.add('spinning');
+
+            let count = 0;
+            const interval = setInterval(() => {
+                result.textContent = options[Math.floor(Math.random() * options.length)];
+                count++;
+                if (count > 15) {
+                    clearInterval(interval);
+                    result.classList.remove('spinning');
+                    const final = options[Math.floor(Math.random() * options.length)];
+                    result.textContent = '🎉 ' + final;
+                    if (currentRound === 2) round2Data[id] = final;
+                    else round3Data[id] = final;
+                    document.getElementById('nextBtn').disabled = false;
+                }
+            }, 100);
+        }
+
+        function renderTextInput(content, step) {
+            content.innerHTML = `
+                <div class="question-label">${step.label}</div>
+                <div class="question-hint">${step.hint || ''}</div>
+                <input type="text" class="text-input" id="textInput" placeholder="type here..." autocomplete="off">
+            `;
+
+            const input = document.getElementById('textInput');
+            input.addEventListener('input', () => { document.getElementById('nextBtn').disabled = !input.value.trim(); });
+            input.addEventListener('keypress', (e) => { if (e.key === 'Enter' && input.value.trim()) nextQuestion(); });
+            input.focus();
+        }
+
+        // ===== ROUND 3: CHAOS MODE =====
+        const round3Steps = [
+            { type: 'slot', id: 'rule', label: 'Spin the slot machine for a random rule!' },
+            { type: 'text', id: 'twist', label: 'Describe an unexpected plot twist!', hint: 'Surprise everyone!' },
+            { type: 'wheel', id: 'winCondition', label: 'Spin for how players win!', options: 'winCondition' },
+            { type: 'generator', id: 'chaos', label: 'Add random chaos!', options: 'chaos' },
+            { type: 'text', id: 'wildElement', label: 'One last wild element!', hint: 'Anything goes!' },
+            { type: 'megaGenerator', id: 'megaBonus', label: 'ULTIMATE RANDOM BONUS!' }
+        ];
+
+        function renderRound3Question(content) {
+            const step = round3Steps[currentQuestion];
+            const progress = ((currentQuestion) / round3Steps.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('nextBtn').textContent = currentQuestion === round3Steps.length - 1 ? 'SEE YOUR STORY! 📖' : 'NEXT →';
+            document.getElementById('nextBtn').disabled = true;
+
+            if (step.type === 'slot') {
+                renderSlotMachine(content, step);
+            } else if (step.type === 'wheel') {
+                renderWheel3(content, step);
+            } else if (step.type === 'generator' || step.type === 'megaGenerator') {
+                renderGenerator3(content, step);
+            } else {
+                renderTextInput(content, step);
+            }
+        }
+
+        function renderSlotMachine(content, step) {
+            content.innerHTML = `
+                <div class="question-label">${step.label}</div>
+                <div class="slot-machine">
+                    <div class="slot-reels">
+                        <div class="slot-reel" id="reel1">???</div>
+                        <div class="slot-reel" id="reel2">???</div>
+                        <div class="slot-reel" id="reel3">???</div>
+                    </div>
+                    <button class="btn btn-small" style="margin-top:15px;" onclick="spinSlots()">PULL LEVER! 🎰</button>
+                </div>
+                <div class="slot-result" id="slotResult"></div>
+            `;
+        }
+
+        function spinSlots() {
+            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+            reels.forEach(r => r.classList.add('spinning'));
+
+            const results = slotReels.map(reel => reel[Math.floor(Math.random() * reel.length)]);
+
+            setTimeout(() => {
+                reels[0].classList.remove('spinning');
+                reels[0].textContent = results[0];
+            }, 1000);
+
+            setTimeout(() => {
+                reels[1].classList.remove('spinning');
+                reels[1].textContent = results[1];
+            }, 1500);
+
+            setTimeout(() => {
+                reels[2].classList.remove('spinning');
+                reels[2].textContent = results[2];
+                const fullResult = results.join(' ');
+                document.getElementById('slotResult').textContent = '🎉 ' + fullResult;
+                round3Data.rule = fullResult;
+                document.getElementById('nextBtn').disabled = false;
+            }, 2000);
+        }
+
+        function renderWheel3(content, step) {
+            const options = wheelOptions[step.options];
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4ecdc4', '#54a0ff', '#ff9ff3'];
+
+            content.innerHTML = `
+                <div class="question-label">${step.label}</div>
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="wheel">
+                        ${options.map((opt, i) => {
+                            const angle = (i * 60) - 60;
+                            return `<div class="wheel-segment" style="transform: rotate(${angle}deg) skewY(-30deg); background: ${colors[i]};">
+                                <span style="transform: skewY(30deg) rotate(30deg);">${opt}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    <div class="wheel-center"></div>
+                </div>
+                <button class="btn btn-small btn-purple" onclick="spinWheel3('${step.id}', '${step.options}')">SPIN! 🎡</button>
+                <div class="wheel-result" id="wheelResult"></div>
+            `;
+        }
+
+        function spinWheel3(id, optionsKey) {
+            const wheel = document.getElementById('wheel');
+            const options = wheelOptions[optionsKey];
+            const randomIndex = Math.floor(Math.random() * options.length);
+            const rotation = 1440 + (randomIndex * 60) + 30;
+
+            wheel.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(() => {
+                const result = options[randomIndex];
+                document.getElementById('wheelResult').textContent = '🎉 ' + result + '!';
+                round3Data[id] = result;
+                document.getElementById('nextBtn').disabled = false;
+            }, 3000);
+        }
+
+        function renderGenerator3(content, step) {
+            const isMega = step.type === 'megaGenerator';
+            content.innerHTML = `
+                <div class="question-label">${step.label}</div>
+                <div class="generator-box" style="${isMega ? 'background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4ecdc4);' : ''}">
+                    <button class="btn btn-small" onclick="generate3('${step.id}', '${step.options || 'megaBonus'}')">
+                        ${isMega ? 'ULTIMATE RANDOM! 🌟' : 'Add Chaos! 🎲'}
+                    </button>
+                    <div class="generator-result" id="genResult">???</div>
+                </div>
+            `;
+        }
+
+        function generate3(id, optionsKey) {
+            const options = generatorOptions[optionsKey];
+            const result = document.getElementById('genResult');
+            result.classList.add('spinning');
+
+            let count = 0;
+            const interval = setInterval(() => {
+                result.textContent = options[Math.floor(Math.random() * options.length)];
+                count++;
+                if (count > 15) {
+                    clearInterval(interval);
+                    result.classList.remove('spinning');
+                    const final = options[Math.floor(Math.random() * options.length)];
+                    result.textContent = '🎉 ' + final;
+                    round3Data[id] = final;
+                    document.getElementById('nextBtn').disabled = false;
+                }
+            }, 100);
+        }
+
+        // ===== NEXT QUESTION =====
+        function nextQuestion() {
+            // Save text input if exists
+            const textInput = document.getElementById('textInput');
+            if (textInput && textInput.value.trim()) {
+                if (currentRound === 1) {
+                    answers[round1Questions[currentQuestion].id] = textInput.value.trim();
+                } else if (currentRound === 2) {
+                    round2Data[round2Steps[currentQuestion].id] = textInput.value.trim();
+                } else {
+                    round3Data[round3Steps[currentQuestion].id] = textInput.value.trim();
+                }
+            }
+
+            currentQuestion++;
+
+            const maxQuestions = currentRound === 1 ? round1Questions.length : (currentRound === 2 ? round2Steps.length : round3Steps.length);
+
+            if (currentQuestion >= maxQuestions) {
+                showStory();
+            } else {
+                renderQuestion();
+            }
+        }
+
+        // ===== SHOW STORIES =====
+        function showStory() {
+            const f = (text) => `<span class="filled-word">${text}</span>`;
+
+            if (currentRound === 1) {
+                const a = answers;
+                document.getElementById('story1Text').innerHTML = `
+                    I never expected my game to take place in ${f(a.place)}, but here we are! In this game, you play as a ${f(a.adjective1)} ${f(a.charName)}, and your main job is to defeat the Math Monster using ${f(a.mathTopic)}.<br><br>
+                    Things get interesting when the game suddenly becomes all about ${f(a.mathLove)}. Players have to use this math to solve ${f(a.bigNumber)} puzzles, or else they might not get very far. If players do well, they earn ${f(a.reward)}, which helps them keep playing.<br><br>
+                    Your trusty sidekick is a ${f(a.adjective2)} ${f(a.animal)} who shouts "${f(a.encourage)}" whenever you're ${f(a.verb)} through the levels. In the end, the whole point of the game is to make everyone go ${f(a.sound)}!
+                `;
+                showScreen('story1Screen');
+            } else if (currentRound === 2) {
+                const a = answers;
+                const r2 = round2Data;
+                document.getElementById('story2Text').innerHTML = `
+                    But wait! Things get trickier when ${f(r2.challenge)} appears! Players must ${f(r2.challengeDesc)} to keep going.<br><br>
+                    Luckily, there's a special ${f(r2.powerup)} that ${f(r2.powerupDesc)}. If you mess up, ${f(r2.failure)}, but don't worry - the game also has ${f(r2.bonus)} to make it more fun!<br><br>
+                    This challenge really makes players think about ${f(a.mathTopic)} in a whole new way!
+                `;
+                showScreen('story2Screen');
+            } else {
+                const a = answers;
+                const r2 = round2Data;
+                const r3 = round3Data;
+                document.getElementById('story3Text').innerHTML = `
+                    Just when you thought it couldn't get crazier, "${f(r3.rule)}" becomes the new rule!<br><br>
+                    There's a shocking twist when ${f(r3.twist)}. Now, to actually win, players have to ${f(r3.winCondition)}!<br><br>
+                    Every time you get an answer right, ${f(r3.chaos)} happens everywhere! Plus, there's ${f(r3.wildElement)} that activates randomly.<br><br>
+                    And the ultimate secret feature? ${f(r3.megaBonus)}! This version is absolutely bonkers, but that's what makes it fun!
+                `;
+                showScreen('story3Screen');
+            }
+        }
+
+        // ===== FINAL PROMPTS =====
+        function showPrompts() {
+            const a = answers;
+            const r2 = round2Data;
+            const r3 = round3Data;
+
+            // Prompt 1 - Basic
+            document.getElementById('prompt1Text').textContent = `Create a math game that takes place in ${a.place} with a ${a.adjective1} ${a.charName} as the main character.
+
+Players use ${a.mathTopic} math to defeat the Math Monster. To play, players must solve ${a.bigNumber} puzzles.
+
+When players do well, ${a.reward} happens in the game.
+
+The goal of the game is to make everyone go ${a.sound}!
+
+Make sure the game uses math as part of how players play and win.`;
+
+            // Prompt 2 - With Challenges
+            document.getElementById('prompt2Text').textContent = `Create a math game that takes place in ${a.place} with a ${a.adjective1} ${a.charName} as the main character.
+
+Players use ${a.mathTopic} math to defeat the Math Monster. To play, players must solve ${a.bigNumber} puzzles.
+
+The game includes a ${r2.challenge} challenge where ${r2.challengeDesc}. Players can use a ${r2.powerup} power-up that ${r2.powerupDesc}. If they fail, ${r2.failure}.
+
+When players do well, ${a.reward} happens. The game also includes ${r2.bonus} feature.
+
+The goal is to make everyone go ${a.sound}!
+
+Make sure the game uses math as part of how players play and win.`;
+
+            // Prompt 3 - Full Chaos
+            document.getElementById('prompt3Text').textContent = `Create a math game that takes place in ${a.place} with a ${a.adjective1} ${a.charName} as the main character.
+
+Players use ${a.mathTopic} math to defeat the Math Monster. To play, players must solve ${a.bigNumber} puzzles.
+
+The game has a special rule: "${r3.rule}". There's a plot twist where ${r3.twist}.
+
+The game includes a ${r2.challenge} challenge where ${r2.challengeDesc}. Players can use a ${r2.powerup} that ${r2.powerupDesc}. If they fail, ${r2.failure}.
+
+When players get answers right, ${r3.chaos} happens! There's also ${r3.wildElement} and ${r3.megaBonus} features, plus ${r2.bonus}.
+
+The goal is to ${r3.winCondition}!
+
+Make sure the game uses math as part of how players play and win. This version should be extra fun and chaotic!`;
+
+            showScreen('promptsScreen');
+        }
+
+        function copyPrompt(num) {
+            const text = document.getElementById('prompt' + num + 'Text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('copy' + num).textContent = '✓ Copied!';
+                setTimeout(() => { document.getElementById('copy' + num).textContent = ''; }, 2000);
+            });
+        }
+
+        function downloadPrompts() {
+            const prompt1 = document.getElementById('prompt1Text').textContent;
+            const prompt2 = document.getElementById('prompt2Text').textContent;
+            const prompt3 = document.getElementById('prompt3Text').textContent;
+
+            const content = `=== MY MATH GAME PROMPTS ===
+
+=== PROMPT 1: The Basic Game ===
+${prompt1}
+
+=== PROMPT 2: With Challenges ===
+${prompt2}
+
+=== PROMPT 3: Full Chaos Mode ===
+${prompt3}
+
+---
+Created with Math Game Mad Libs!
+Paste these into Lovable.dev to build your game!`;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'my-math-game-prompts.txt';
+            link.click();
+        }
+    </script>
+</body>
+</html>

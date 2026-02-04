@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game Designer - Retro Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        #app {
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Pixelated scanlines effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                transparent 1px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 3px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Page Container */
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pixel border effect */
+        .pixel-border {
+            border: 4px solid #b8b8d0;
+            box-shadow:
+                0 0 0 4px #7a7a9a,
+                0 0 0 8px #d0d0e0,
+                0 8px 0 8px rgba(122, 122, 154, 0.3);
+            background: rgba(240, 240, 250, 0.95);
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Title styling */
+        .page-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: clamp(20px, 5vw, 32px);
+            text-align: center;
+            margin-bottom: 30px;
+            color: #d4a017;
+            text-shadow:
+                3px 3px 0 #ff99b4,
+                6px 6px 0 #7a7a9a;
+            line-height: 1.3;
+            letter-spacing: 1px;
+        }
+
+        .page-instructions {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            font-size: clamp(14px, 2.5vw, 18px);
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a9fb8;
+            line-height: 1.6;
+        }
+
+        /* Math Topic Buttons */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .topic-button {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, #a5b8f3 0%, #c8a5d4 100%);
+            border: 4px solid #d0d0e0;
+            box-shadow:
+                0 4px 0 0 #7a7a9a,
+                0 8px 0 0 rgba(122, 122, 154, 0.3);
+            color: #2a2a4a;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .topic-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 6px 0 0 #7a7a9a,
+                0 10px 0 0 rgba(122, 122, 154, 0.3);
+        }
+
+        .topic-button:active,
+        .topic-button.selected {
+            transform: translateY(4px);
+            box-shadow:
+                0 0 0 0 #7a7a9a,
+                0 4px 0 0 rgba(122, 122, 154, 0.3);
+        }
+
+        .topic-button.selected {
+            background: linear-gradient(135deg, #f5b5fc 0%, #f9a5b4 100%);
+            border-color: #d4a017;
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Mystery Box Section */
+        .chest-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .chest-wrapper {
+            text-align: center;
+        }
+
+        .chest-label {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #d4a017;
+            text-shadow: 2px 2px 0 #7a7a9a;
+        }
+
+        .mystery-box {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ffe680 0%, #ffc266 100%);
+            border: 6px solid #7a7a9a;
+            box-shadow:
+                0 0 0 3px #ffe680,
+                0 8px 0 3px #7a7a9a,
+                0 12px 20px rgba(122, 122, 154, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .mystery-box:hover {
+            animation: float 1.5s ease-in-out infinite;
+        }
+
+        .mystery-box.bouncing {
+            animation: bounce-reveal 0.4s ease-in-out infinite !important;
+        }
+
+        .mystery-box.revealed {
+            animation: none;
+            box-shadow:
+                0 0 0 3px #ffe680,
+                0 8px 0 3px #7a7a9a,
+                0 12px 20px rgba(122, 122, 154, 0.3),
+                0 0 30px rgba(255, 230, 128, 0.6);
+        }
+
+        .mystery-box-symbol {
+            font-size: 80px;
+            font-weight: bold;
+            color: #2a2a4a;
+            text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.7);
+            user-select: none;
+        }
+
+        .cycling-emoji {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            animation: emoji-pop 0.1s ease-in-out;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes bounce-reveal {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-25px) scale(1.05);
+            }
+        }
+
+        @keyframes emoji-pop {
+            0% {
+                transform: translateX(-50%) scale(0.5);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .sparkles {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mystery-box.revealed .sparkles {
+            opacity: 1;
+            animation: sparkle-burst 0.8s ease;
+        }
+
+        @keyframes sparkle-burst {
+            0% {
+                transform: translateX(-50%) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.5) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(1) rotate(360deg);
+                opacity: 1;
+            }
+        }
+
+        .constraint-bubble {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background: rgba(255, 255, 255, 0.98);
+            color: #2a2a4a;
+            padding: 20px;
+            border: 4px solid #7a7a9a;
+            border-radius: 10px;
+            margin-top: 30px;
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: 0 8px 0 rgba(122, 122, 154, 0.3);
+            position: relative;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: bubble-appear 0.5s ease;
+        }
+
+        @keyframes bubble-appear {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .constraint-bubble::before {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid #7a7a9a;
+        }
+
+        .constraint-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 17px solid rgba(255, 255, 255, 0.95);
+        }
+
+        /* Buttons */
+        .game-button {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #f5b5fc 0%, #f9a5b4 100%);
+            border: 4px solid #d0d0e0;
+            box-shadow:
+                0 4px 0 0 #7a7a9a,
+                0 8px 0 0 rgba(122, 122, 154, 0.3);
+            color: #2a2a4a;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: block;
+            margin: 40px auto;
+        }
+
+        .game-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 6px 0 0 #7a7a9a,
+                0 10px 0 0 rgba(122, 122, 154, 0.3);
+        }
+
+        .game-button:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 0 0 0 #7a7a9a,
+                0 4px 0 0 rgba(122, 122, 154, 0.3);
+        }
+
+        .game-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .retry-button {
+            background: linear-gradient(135deg, #ffe8c4 0%, #88b8d4 100%);
+            font-size: 12px;
+            padding: 15px 30px;
+        }
+
+        /* Sentence Starters Section */
+        .constraints-display {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background: rgba(230, 230, 245, 0.9);
+            border: 4px solid #d4a017;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #2a2a4a;
+        }
+
+        .constraints-display h3 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            color: #2a2a4a;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .prompt-section {
+            margin-bottom: 40px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .prompt-label {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: #d4a017;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 #7a7a9a;
+        }
+
+        .prompt-hint {
+            font-size: 9px;
+            color: #4a9fb8;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .text-input,
+        .textarea-input {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            font-size: 16px;
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid #b8b8d0;
+            color: #2a2a4a;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .text-input:focus,
+        .textarea-input:focus {
+            outline: none;
+            border-color: #4a9fb8;
+            box-shadow: 0 0 20px rgba(74, 159, 184, 0.5);
+        }
+
+        .textarea-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .inspiration-button {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #a5b8f3 0%, #c8a5d4 100%);
+            border: 3px solid #d0d0e0;
+            box-shadow: 0 4px 0 0 #7a7a9a;
+            color: #2a2a4a;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .inspiration-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 0 0 #7a7a9a;
+        }
+
+        .inspiration-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #7a7a9a;
+        }
+
+        .examples-container {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #4a9fb8;
+            padding: 0;
+            margin-top: 0;
+            font-size: 15px;
+            line-height: 1.8;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .examples-container.show {
+            max-height: 500px;
+            padding: 15px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            opacity: 1;
+        }
+
+        .examples-container ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .examples-container li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #2a2a4a;
+        }
+
+        .examples-container li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #d4a017;
+        }
+
+        .loading {
+            color: #4a9fb8;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Final Page - Game Cartridge */
+        .cartridge-container {
+            text-align: center;
+            animation: slideInFromRight 1s ease;
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100%) rotate(10deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        .cartridge {
+            width: 300px;
+            height: 200px;
+            margin: 0 auto 40px;
+            background: linear-gradient(135deg, #a5b8f3 0%, #c8a5d4 100%);
+            border: 6px solid #7a7a9a;
+            box-shadow:
+                0 0 0 4px #d0d0e0,
+                0 10px 0 4px #7a7a9a,
+                0 20px 30px rgba(122, 122, 154, 0.3);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            text-shadow: 3px 3px 0 #7a7a9a;
+        }
+
+        .cartridge::before {
+            content: "";
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 30px;
+            background: #7a7a9a;
+            border: 2px solid #d0d0e0;
+        }
+
+        .final-prompt-box {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background: rgba(255, 255, 255, 0.98);
+            border: 4px solid #4a9fb8;
+            padding: 30px;
+            margin: 30px 0;
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: left;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+            color: #2a2a4a;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #b8f5d3 0%, #c4e8f7 100%);
+            font-size: 16px;
+            padding: 25px 50px;
+            margin: 20px 10px;
+        }
+
+        .copy-button.copied {
+            background: linear-gradient(135deg, #f5b5fc 0%, #f9a5b4 100%);
+            animation: successPulse 0.5s ease;
+        }
+
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 16px;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .chest-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .mystery-box {
+                width: 150px;
+                height: 150px;
+            }
+
+            .mystery-box-symbol {
+                font-size: 60px;
+            }
+
+            .cycling-emoji {
+                font-size: 50px;
+            }
+
+            .game-button {
+                font-size: 12px;
+                padding: 15px 30px;
+            }
+
+            .cartridge {
+                width: 250px;
+                height: 160px;
+                font-size: 16px;
+            }
+        }
+
+        /* Progress indicator dots */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .progress-dot {
+            width: 20px;
+            height: 20px;
+            background: rgba(208, 208, 224, 0.5);
+            border: 3px solid #d0d0e0;
+            box-shadow: 0 3px 0 #7a7a9a;
+        }
+
+        .progress-dot.active {
+            background: #d4a017;
+            animation: dotPulse 1s infinite;
+        }
+
+        .progress-dot.completed {
+            background: #90d890;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script>
+        // Inline JavaScript to avoid file loading issues
+        const { useState, useEffect } = React;
+
+        // Data arrays
+        const mathTopics = [
+            "Ratios", "Fractions", "Percentages", "Geometry & Angles",
+            "Graphing & Coordinates", "Algebraic Thinking",
+            "Patterns & Sequences", "Money & Making Change", "Measurement"
+        ];
+
+        const motivationConstraints = [
+            "Give the player a character or creature to care for",
+            "Let players unlock a story piece by piece",
+            "Create a mystery the player has to solve",
+            "Make players feel like an expert at something",
+            "Show visual progress that's satisfying to watch grow",
+            "Let players customize or build something that's theirs",
+            "Create combo moves or streaks that feel exciting",
+            "Give players choices that change what happens",
+            "Let players collect things to unlock new abilities",
+            "Make mistakes funny instead of frustrating",
+            "Let players compete against their own past score",
+            "Add a risk-reward decision (play it safe vs. go big)",
+            "Celebrate small wins with sounds or animations",
+            "Give players a second chance or power-up when things get hard",
+            "Make the challenge increase gradually so players feel capable"
+        ];
+
+        const mathConstraintsByTopic = {
+            "Ratios": [
+                "Players must compare ratios to make decisions (which is faster, stronger, or better value?)",
+                "Players need to find equivalent ratios or fractions to solve challenges",
+                "Players must optimize something using math (best deal, shortest path, maximum profit)",
+                "Players must estimate before they calculate",
+                "The game uses ratios to scale things up or down (making recipes bigger, shrinking/growing objects)"
+            ],
+            "Fractions": [
+                "Success requires comparing fractions or percentages",
+                "Players need to find equivalent ratios or fractions to solve challenges",
+                "Players have to split things fairly between characters or teams",
+                "Players must estimate before they calculate",
+                "The game requires adding or subtracting fractions to progress"
+            ],
+            "Percentages": [
+                "Success requires comparing fractions or percentages",
+                "The game shows percentage increases or decreases (like health bars, discounts, or growth)",
+                "Players collect or spend money and have to make change",
+                "Players calculate what percent of something they've completed or collected",
+                "Players must find a percentage of a number (like calculating a discount or tip)"
+            ],
+            "Geometry & Angles": [
+                "Players must estimate or measure angles to aim, build, or navigate",
+                "Players use coordinates to locate or place things on a grid",
+                "The game uses area or perimeter in challenges (fitting things in spaces, building borders)",
+                "Players must identify or create shapes with specific properties",
+                "Success depends on understanding how shapes fit together or tessellate"
+            ],
+            "Graphing & Coordinates": [
+                "Players use coordinates to locate or place things on a grid",
+                "Success requires understanding slope (things getting steeper, faster, or harder)",
+                "Players analyze patterns to predict what comes next",
+                "The game shows relationships between variables that players must interpret",
+                "Players plot points or follow paths on a coordinate plane"
+            ],
+            "Algebraic Thinking": [
+                "Players solve for unknown numbers (what's missing?)",
+                "Success requires working backwards from a target number",
+                "Players must estimate before they calculate",
+                "The game requires understanding variables (letters that stand for numbers)",
+                "Players balance equations or create equal values on both sides"
+            ],
+            "Patterns & Sequences": [
+                "Players analyze patterns to predict what comes next",
+                "Players decode or create something using number patterns",
+                "Success depends on extending a pattern or sequence",
+                "The game requires finding the rule that creates a pattern",
+                "Players must identify which item breaks the pattern"
+            ],
+            "Money & Making Change": [
+                "Players collect or spend money and have to make change",
+                "Players must optimize something using math (best deal, shortest path, maximum profit)",
+                "Players compare prices to find the best value",
+                "Success requires budgeting or managing money within limits",
+                "The game involves earning, saving, and spending with trade-offs"
+            ],
+            "Measurement": [
+                "The game involves measuring distance, time, or speed",
+                "The game uses a timer where players calculate time remaining",
+                "Players must convert between different units (inches to feet, minutes to seconds)",
+                "Success requires estimating measurements before checking",
+                "The game involves comparing measurements (longer/shorter, heavier/lighter, faster/slower)"
+            ]
+        };
+
+        const staticExamples = {
+            players: [
+                "1 player (single-player)",
+                "2 players (head-to-head)",
+                "2-4 players (small group)",
+                "1-6 players (flexible)",
+                "Teams of 2-3 players each"
+            ]
+        };
+
+        // Progress Indicator Component
+        function ProgressIndicator({ currentPage }) {
+            return React.createElement('div', { className: 'progress-dots' },
+                [1, 2, 3, 4].map(page =>
+                    React.createElement('div', {
+                        key: page,
+                        className: `progress-dot ${page === currentPage ? 'active' : ''} ${page < currentPage ? 'completed' : ''}`
+                    })
+                )
+            );
+        }
+
+        // Page 1: Math Topic Selection
+        function Page1({ selectedTopic, onSelectTopic, onNext }) {
+            return React.createElement('div', { className: 'page-container' },
+                React.createElement(ProgressIndicator, { currentPage: 1 }),
+                React.createElement('div', { className: 'pixel-border' },
+                    React.createElement('h1', { className: 'page-title' }, 'LEVEL 1: CHOOSE YOUR MATH POWER'),
+                    React.createElement('p', { className: 'page-instructions' }, 'What math topic will players practice in your game?'),
+                    React.createElement('div', { className: 'topic-grid' },
+                        mathTopics.map(topic =>
+                            React.createElement('button', {
+                                key: topic,
+                                className: `topic-button ${selectedTopic === topic ? 'selected' : ''}`,
+                                onClick: () => onSelectTopic(topic)
+                            }, topic)
+                        )
+                    ),
+                    React.createElement('button', {
+                        className: 'game-button',
+                        onClick: onNext,
+                        disabled: !selectedTopic
+                    }, 'NEXT LEVEL →')
+                )
+            );
+        }
+
+        // Page 2: Mystery Box Selection
+        function Page2({ selectedTopic, motivationConstraint, mathConstraint, onSetMotivationConstraint, onSetMathConstraint, onReset, onNext }) {
+            const [leftRevealing, setLeftRevealing] = useState(false);
+            const [rightRevealing, setRightRevealing] = useState(false);
+            const [leftCycleEmoji, setLeftCycleEmoji] = useState(null);
+            const [rightCycleEmoji, setRightCycleEmoji] = useState(null);
+            const [leftRevealed, setLeftRevealed] = useState(false);
+            const [rightRevealed, setRightRevealed] = useState(false);
+
+            const emojis = ['🎮', '🎲', '🎯', '⭐', '💎', '🎪', '🎨', '🎭', '🎰', '💫', '✨', '🔮', '🎁', '🏆', '🎉'];
+
+            useEffect(() => {
+                if (motivationConstraint && !leftRevealing) setLeftRevealed(true);
+                if (mathConstraint && !rightRevealing) setRightRevealed(true);
+            }, [motivationConstraint, mathConstraint, leftRevealing, rightRevealing]);
+
+            const handleRetry = () => {
+                setLeftRevealed(false);
+                setRightRevealed(false);
+                setLeftCycleEmoji(null);
+                setRightCycleEmoji(null);
+                // Clear constraints so boxes can be clicked again
+                onReset();
+            };
+
+            const handleBoxClick = (side) => {
+                if (side === 'left' && !motivationConstraint && !leftRevealing) {
+                    setLeftRevealing(true);
+
+                    // Start emoji cycling animation
+                    const cycleInterval = setInterval(() => {
+                        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                        setLeftCycleEmoji(randomEmoji);
+                    }, 100);
+
+                    // After 2.5 seconds, slow down
+                    setTimeout(() => {
+                        clearInterval(cycleInterval);
+                        const slowInterval = setInterval(() => {
+                            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                            setLeftCycleEmoji(randomEmoji);
+                        }, 300);
+
+                        // Final reveal after additional 0.5s
+                        setTimeout(() => {
+                            clearInterval(slowInterval);
+                            setLeftCycleEmoji(null);
+                            setLeftRevealing(false);
+                            // Set the random motivation constraint
+                            const randomMotivation = motivationConstraints[Math.floor(Math.random() * motivationConstraints.length)];
+                            onSetMotivationConstraint(randomMotivation);
+                        }, 500);
+                    }, 2500);
+                } else if (side === 'right' && !mathConstraint && !rightRevealing) {
+                    setRightRevealing(true);
+
+                    // Start emoji cycling animation
+                    const cycleInterval = setInterval(() => {
+                        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                        setRightCycleEmoji(randomEmoji);
+                    }, 100);
+
+                    // After 2.5 seconds, slow down
+                    setTimeout(() => {
+                        clearInterval(cycleInterval);
+                        const slowInterval = setInterval(() => {
+                            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                            setRightCycleEmoji(randomEmoji);
+                        }, 300);
+
+                        // Final reveal after additional 0.5s
+                        setTimeout(() => {
+                            clearInterval(slowInterval);
+                            setRightCycleEmoji(null);
+                            setRightRevealing(false);
+                            // Set the random math constraint
+                            const mathConstraintsForTopic = mathConstraintsByTopic[selectedTopic] || [];
+                            const randomMath = mathConstraintsForTopic[Math.floor(Math.random() * mathConstraintsForTopic.length)];
+                            onSetMathConstraint(randomMath);
+                        }, 500);
+                    }, 2500);
+                }
+            };
+
+            return React.createElement('div', { className: 'page-container' },
+                React.createElement(ProgressIndicator, { currentPage: 2 }),
+                React.createElement('div', { className: 'pixel-border' },
+                    React.createElement('h1', { className: 'page-title' }, 'LEVEL 2: UNLOCK YOUR POWER-UPS'),
+                    React.createElement('p', { className: 'page-instructions' }, 'Click the mystery boxes to reveal your random constraints!'),
+                    React.createElement('div', { className: 'chest-container' },
+                        React.createElement('div', { className: 'chest-wrapper' },
+                            React.createElement('div', { className: 'chest-label' }, 'MOTIVATION CHALLENGE'),
+                            React.createElement('div', { style: { position: 'relative' } },
+                                leftCycleEmoji && React.createElement('div', { className: 'cycling-emoji' }, leftCycleEmoji),
+                                React.createElement('div', {
+                                    className: `mystery-box ${leftRevealing ? 'bouncing' : ''} ${leftRevealed ? 'revealed' : ''}`,
+                                    onClick: () => handleBoxClick('left')
+                                },
+                                    React.createElement('div', { className: 'mystery-box-symbol' }, leftRevealed ? '!' : '?'),
+                                    React.createElement('div', { className: 'sparkles' }, '✨💎✨')
+                                )
+                            ),
+                            motivationConstraint && React.createElement('div', { className: 'constraint-bubble' }, motivationConstraint)
+                        ),
+                        React.createElement('div', { className: 'chest-wrapper' },
+                            React.createElement('div', { className: 'chest-label' }, 'MATH CHALLENGE'),
+                            React.createElement('div', { style: { position: 'relative' } },
+                                rightCycleEmoji && React.createElement('div', { className: 'cycling-emoji' }, rightCycleEmoji),
+                                React.createElement('div', {
+                                    className: `mystery-box ${rightRevealing ? 'bouncing' : ''} ${rightRevealed ? 'revealed' : ''}`,
+                                    onClick: () => handleBoxClick('right')
+                                },
+                                    React.createElement('div', { className: 'mystery-box-symbol' }, rightRevealed ? '!' : '?'),
+                                    React.createElement('div', { className: 'sparkles' }, '✨🔢✨')
+                                )
+                            ),
+                            mathConstraint && React.createElement('div', { className: 'constraint-bubble' }, mathConstraint)
+                        )
+                    ),
+                    motivationConstraint && mathConstraint && React.createElement(React.Fragment, null,
+                        React.createElement('button', { className: 'game-button retry-button', onClick: handleRetry }, '🔄 TRY AGAIN'),
+                        React.createElement('button', { className: 'game-button', onClick: onNext }, 'NEXT LEVEL →')
+                    )
+                )
+            );
+        }
+
+        // Page 3: Game Design Sentence Starters
+        function Page3({ selectedTopic, motivationConstraint, mathConstraint, gameData, onUpdateGameData, onNext }) {
+            const [showExamples, setShowExamples] = useState({});
+            const [aiExamples, setAiExamples] = useState({});
+            const [loading, setLoading] = useState({});
+            const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
+
+            const prompts = [
+                { key: 'players', label: 'How many players are there in the game?', hint: '', multiline: false },
+                { key: 'goal', label: 'What is the goal of the game? How do players win?', hint: '', multiline: true },
+                { key: 'turns', label: 'What happens on each turn?', hint: '', multiline: true },
+                { key: 'actions', label: 'How will you incorporate your MATH challenge into the game?', hint: '', multiline: true },
+                { key: 'engagement', label: 'How will you incorporate your MOTIVATION challenge into the game?', hint: '', multiline: true },
+                { key: 'other', label: 'Any other information you want to provide about the game?', hint: '', multiline: true }
+            ];
+
+            const currentPrompt = prompts[currentPromptIndex];
+
+            const handleInputChange = (key, value) => {
+                onUpdateGameData({ ...gameData, [key]: value });
+            };
+
+            const handleContinue = () => {
+                if (currentPromptIndex < prompts.length - 1) {
+                    setCurrentPromptIndex(currentPromptIndex + 1);
+                }
+            };
+
+            const toggleExamples = async (key) => {
+                const newShowState = !showExamples[key];
+                setShowExamples({ ...showExamples, [key]: newShowState });
+
+                if (newShowState && key !== 'setting' && !aiExamples[key]) {
+                    await generateAIExamples(key);
+                }
+            };
+
+            const generateAIExamples = async (key) => {
+                setLoading({ ...loading, [key]: true });
+
+                try {
+                    const response = await fetch('http://localhost:3000/generate-examples', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            promptKey: key,
+                            setting: gameData.setting || '',
+                            players: gameData.players || '',
+                            goal: gameData.goal || '',
+                            mathTopic: selectedTopic,
+                            mathConstraint: mathConstraint,
+                            motivationConstraint: motivationConstraint
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('Failed to generate examples');
+
+                    const data = await response.json();
+                    setAiExamples({ ...aiExamples, [key]: data.examples });
+                } catch (error) {
+                    console.error('Error generating examples:', error);
+
+                    // Generate contextual fallback examples based on topic and constraints
+                    const generateContextualExamples = () => {
+                        const topic = selectedTopic;
+                        let playerExamples, goalExamples, turnsExamples;
+
+                        // QUESTION 1: Players - Based on math topic
+                        if (topic === 'Ratios') {
+                            playerExamples = ['2 players competing to see who can find better deals', '1 player managing a team with different ability ratios', '2-4 players racing to complete recipes with correct ratios'];
+                        } else if (topic === 'Fractions') {
+                            playerExamples = ['1 player working through increasingly difficult fraction challenges', '2-4 players splitting resources fairly among their teams', '2 players competing to collect the most fractional pieces'];
+                        } else if (topic === 'Percentages') {
+                            playerExamples = ['1 player managing a store with changing prices', '2-4 players competing to find the best deals', '1 player with a health bar that changes by percentages'];
+                        } else if (topic === 'Geometry & Angles') {
+                            playerExamples = ['1 player aiming projectiles at targets', '2 players building structures with specific angle requirements', '2-4 players navigating a maze using angle measurements'];
+                        } else if (topic === 'Graphing & Coordinates') {
+                            playerExamples = ['1 player plotting a path on a coordinate plane', '2 players playing coordinate battleship', '2-4 players racing to collect items at specific coordinates'];
+                        } else if (topic === 'Algebraic Thinking') {
+                            playerExamples = ['1 player solving increasingly complex puzzles', '2 players racing to solve for x', '2-4 players working together to crack codes'];
+                        } else if (topic === 'Patterns & Sequences') {
+                            playerExamples = ['1 player predicting what comes next in sequences', '2-4 players racing to extend patterns correctly', '2 players creating patterns for each other to solve'];
+                        } else if (topic === 'Money & Making Change') {
+                            playerExamples = ['1 player running a store and managing money', '2-4 players competing to earn the most profit', '2 players buying and selling items'];
+                        } else if (topic === 'Measurement') {
+                            playerExamples = ['1 player racing against time to complete measurements', '2-4 players competing to estimate measurements most accurately', '2 players building things that meet specific measurement requirements'];
+                        } else {
+                            playerExamples = ['1 player (single-player)', '2 players (head-to-head)', '2-4 players (small group)'];
+                        }
+
+                        // QUESTION 2: Goal - Based on math topic
+                        if (topic === 'Ratios') {
+                            goalExamples = ['First player to correctly scale 10 recipes wins', 'Collect the most efficient team by comparing player stat ratios', 'Build the tallest structure while maintaining the correct ratio of materials'];
+                        } else if (topic === 'Fractions') {
+                            goalExamples = ['Collect exactly 5 whole units by combining fractions', 'First player to fairly divide their treasure among all characters wins', 'Complete the most recipes by adding and subtracting ingredient fractions'];
+                        } else if (topic === 'Percentages') {
+                            goalExamples = ['Grow your savings to 200% of starting amount', 'First to collect items worth 100 coins after all discounts wins', "Keep your character's health above 50% for 10 rounds"];
+                        } else if (topic === 'Geometry & Angles') {
+                            goalExamples = ['Hit 10 targets by estimating the correct launch angle', 'Build a structure that uses at least 5 different types of angles', 'First player to navigate to the center of the maze using angle turns wins'];
+                        } else if (topic === 'Graphing & Coordinates') {
+                            goalExamples = ['Plot a path that collects all treasures using the fewest moves', "First player to locate all their opponent's hidden items wins", 'Navigate to coordinates (10, 10) before your opponents'];
+                        } else if (topic === 'Algebraic Thinking') {
+                            goalExamples = ['Unlock 10 doors by solving for the unknown number', 'First player to balance 15 equations wins', 'Crack the code by finding all the missing variables'];
+                        } else if (topic === 'Patterns & Sequences') {
+                            goalExamples = ['Correctly predict the next 20 numbers in various sequences', 'First player to complete 10 patterns wins', 'Identify the rule for 15 different sequences'];
+                        } else if (topic === 'Money & Making Change') {
+                            goalExamples = ['Earn $100 by making smart purchasing decisions', 'First player to give correct change 20 times wins', 'End with the most money after buying and selling strategically'];
+                        } else if (topic === 'Measurement') {
+                            goalExamples = ['Complete 15 measurements within the time limit', "Build a structure that's exactly 50 cm tall", 'Make the most accurate estimates across 10 measurement challenges'];
+                        } else {
+                            goalExamples = ['Players win by collecting the most points', 'First player to reach the goal wins', 'Complete all challenges to win'];
+                        }
+
+                        // QUESTION 3: Turns - Based on math topic
+                        if (topic === 'Ratios') {
+                            turnsExamples = ['Player draws two ratio cards and must decide which represents better value', 'Player receives ingredients and must scale the recipe up or down to feed the right number of people', 'Player compares speed ratios of different vehicles to choose the fastest route'];
+                        } else if (topic === 'Fractions') {
+                            turnsExamples = ['Player draws a fraction card and must add it to their collection or trade it', 'Player divides resources among characters and must prove the split is fair using equivalent fractions', 'Player combines two fraction ingredients and simplifies the result'];
+                        } else if (topic === 'Percentages') {
+                            turnsExamples = ['Player encounters a sale (20% off, 30% off, etc.) and must calculate final prices', "Player's health increases or decreases by a percentage based on their choices", "Player calculates what percentage of their goal they've completed"];
+                        } else if (topic === 'Geometry & Angles') {
+                            turnsExamples = ["Player estimates an angle to aim their shot, then checks if they're within 5 degrees", 'Player places a shape piece and must verify all angles connect properly', 'Player chooses a direction using angles (turn 90° right, 45° left, etc.)'];
+                        } else if (topic === 'Graphing & Coordinates') {
+                            turnsExamples = ['Player gives coordinates to move to and must calculate the distance traveled', "Player guesses coordinates to try to find opponent's hidden objects", 'Player plots points that reveal part of a hidden picture'];
+                        } else if (topic === 'Algebraic Thinking') {
+                            turnsExamples = ['Player receives an equation with an unknown and must solve for it', 'Player chooses a locked door and solves the equation to open it', 'Player works backwards from a target number to figure out the starting value'];
+                        } else if (topic === 'Patterns & Sequences') {
+                            turnsExamples = ['Player sees a sequence and must predict the next three numbers', "Player draws pattern cards and must identify what's missing or what comes next", 'Player extends a pattern and opponent verifies if it follows the rule'];
+                        } else if (topic === 'Money & Making Change') {
+                            turnsExamples = ['Player makes a purchase and must calculate the correct change', 'Player decides whether to buy, save, or invest their money', 'Player compares prices at different stores to find the best value'];
+                        } else if (topic === 'Measurement') {
+                            turnsExamples = ['Player estimates a measurement then checks actual measurement to see how close they were', 'Player converts between units (inches to feet, minutes to seconds) to solve challenges', 'Player calculates speed, distance, or time to make strategic decisions'];
+                        } else {
+                            turnsExamples = ['On each turn, players draw a card and solve a problem', 'Players roll dice and answer a question', 'Each turn involves completing a challenge'];
+                        }
+
+                        // QUESTION 4: Math Integration - Based on math constraint
+                        const mathCon = mathConstraint;
+                        let actionExamples;
+                        if (mathCon && mathCon.includes('estimate before')) {
+                            actionExamples = ['Before solving each math problem, players must estimate the answer within 10% to earn bonus points', 'Players guess the measurement first, then measure to check - closer estimates earn more points', "Players estimate how many moves it will take before starting, then try to match their estimate"];
+                        } else if (mathCon && mathCon.includes('compare ratios')) {
+                            actionExamples = ['Players choose between power-ups by comparing ratios (3:4 speed vs 5:7 speed - which is faster?)', 'Each character has a strength:speed ratio - players compare to build the best team', 'Players compare price ratios at different stores (3 for $5 vs 5 for $8) to find the best deal'];
+                        } else if (mathCon && mathCon.includes('comparing fractions or percentages')) {
+                            actionExamples = ['Players collect power-ups shown as fractions and must keep the largest ones', 'Health bars show percentages - players compare to decide who needs healing most', "Players choose paths by comparing completion percentages (you're 3/4 done vs 60% done)"];
+                        } else if (mathCon && mathCon.includes('analyze patterns')) {
+                            actionExamples = ['Enemies appear in patterns - players must predict when the next wave comes', 'Players unlock new levels by correctly predicting the next number in the sequence', 'The game gives clues in patterns - solving the pattern reveals the location of hidden items'];
+                        } else if (mathCon && mathCon.includes('coordinates')) {
+                            actionExamples = ['Players navigate by typing coordinates to move to specific locations', 'Hidden treasures are at specific coordinates - players must plot their search path', 'Players place defenses on a grid using coordinates to protect their base'];
+                        } else if (mathCon && mathCon.includes('optimize')) {
+                            actionExamples = ['Players calculate which combination of items gives the most points for the least cost', 'Players plan the shortest route by calculating distances between locations', 'Players decide which upgrades to buy to maximize their efficiency within budget'];
+                        } else if (mathCon && mathCon.includes('working backwards')) {
+                            actionExamples = ['Players see the final score needed and must figure out which moves will get them there', 'Each level shows the end state - players work backwards to find the starting values', 'Players reverse-engineer recipes by knowing the final amount and figuring out ingredients needed'];
+                        } else if (mathCon && mathCon.includes('solve for unknown')) {
+                            actionExamples = ['Doors are locked with equations - players solve for x to unlock them', 'Players complete missing values in patterns to advance', 'Treasure chests show equations - finding the unknown opens the chest'];
+                        } else if (mathCon && mathCon.includes('equivalent')) {
+                            actionExamples = ['Players match fraction cards that are equivalent to score points', 'Different doors require equivalent ratios as keys - players must recognize which key fits', 'Players trade resources using equivalent fractions (trade 2/4 for 1/2)'];
+                        } else if (mathCon && mathCon.includes('make change')) {
+                            actionExamples = ['Players run a store and must give correct change to customers quickly', 'Players earn money and spend it - they must track their budget and make change', 'Fast-food challenge: give change correctly under time pressure for points'];
+                        } else if (mathCon && mathCon.includes('measuring distance, time, or speed')) {
+                            actionExamples = ['Players calculate how long it takes to reach destinations at different speeds', 'Players race by choosing speeds and calculating arrival times', 'Players measure distances on a map to plan the most efficient route'];
+                        } else if (mathCon && mathCon.includes('timer')) {
+                            actionExamples = ['Clock shows 3:45 remaining - after spending 1:20 on a challenge, players calculate time left', 'Players estimate if they have enough time to complete additional challenges', 'Players must finish tasks before time runs out - they calculate seconds left between actions'];
+                        } else if (mathCon && mathCon.includes('percentage increases or decreases')) {
+                            actionExamples = ["Health bar shows percentage - taking damage decreases it by 15%, healing increases it by 25%", "Players' strength grows by 20% each level - they calculate new power values", 'Store prices change by percentages - players calculate sale prices'];
+                        } else if (mathCon && mathCon.includes('estimate or measure angles')) {
+                            actionExamples = ['Players aim a slingshot and must estimate the angle (30°, 45°, 60°) to hit targets', 'Players build bridges with specific angle requirements to make them stable', 'Players navigate by turning at certain angles - 90° right, 45° left, etc.'];
+                        } else if (mathCon && mathCon.includes('slope')) {
+                            actionExamples = ['Each level gets steeper (higher slope) - players must adjust their strategy', 'Players compare ramps with different slopes to choose the fastest one', 'Difficulty increases at different rates - players track the slope to predict future challenges'];
+                        } else if (mathCon && mathCon.includes('adding or subtracting fractions')) {
+                            actionExamples = ['Players combine ingredient fractions to create recipes (1/4 cup + 1/2 cup = ?)', 'Players collect fractional pieces and must add them to reach exactly 1 whole', 'Moving forward requires adding fractions to see if you have enough energy'];
+                        } else if (mathCon && mathCon.includes('split things fairly')) {
+                            actionExamples = ['Players divide treasure equally among 3 pirates and must show equivalent fractions', 'Resources must be split fairly - players prove it by showing equal fractions', 'Players portion out pizza slices to make sure everyone gets the same amount'];
+                        } else if (mathCon && mathCon.includes('what percent')) {
+                            actionExamples = ['Progress bar shows "You\'ve collected 45 out of 60 stars - what percent is that?"', "Players track what percentage of the map they've explored", "After each level, players calculate what percent of the game they've completed"];
+                        } else if (mathCon && mathCon.includes('percentage of a number')) {
+                            actionExamples = ['Store items show original price - players calculate 25% off to find sale price', 'Players tip 15% or 20% at a restaurant and must calculate the amount', 'Power-ups cost a percentage of your total points - calculate the cost'];
+                        } else if (mathCon && mathCon.includes('area or perimeter')) {
+                            actionExamples = ['Players must fit furniture in a room by calculating area', 'Building a fence requires calculating perimeter to know how much material needed', 'Players arrange shapes to fill a space completely without gaps'];
+                        } else if (mathCon && mathCon.includes('shapes with specific properties')) {
+                            actionExamples = ['Players collect shapes and must identify which have parallel sides, right angles, etc.', 'Building challenges require using shapes with specific numbers of sides', 'Players sort shapes into categories based on their properties'];
+                        } else if (mathCon && mathCon.includes('tessellate')) {
+                            actionExamples = ['Players arrange shapes to tile a floor with no gaps', 'Puzzle pieces must tessellate correctly to reveal the picture', 'Players build patterns using shapes that fit together perfectly'];
+                        } else if (mathCon && mathCon.includes('relationships between variables')) {
+                            actionExamples = ['Graph shows how score increases with time - players interpret to make strategy decisions', 'Players see a graph of speed vs. distance and must predict outcomes', 'Game shows relationship between two variables - players use it to make choices'];
+                        } else if (mathCon && mathCon.includes('plot points')) {
+                            actionExamples = ['Players follow a path by plotting a series of coordinates in order', 'Hidden message revealed by plotting coordinates to connect the dots', 'Players create shapes by plotting vertices on a coordinate grid'];
+                        } else if (mathCon && mathCon.includes('variables')) {
+                            actionExamples = ['Recipes use variables like "add x cups of flour where x is the number of people"', 'Players see "score = coins × level" and must calculate their score', 'Mystery numbers are represented by letters - players figure out what they represent'];
+                        } else if (mathCon && mathCon.includes('balance equations')) {
+                            actionExamples = ['Scale shows items on both sides - players add items to balance it', 'Doors open when both sides of the equation are equal', 'Players rearrange items to make both sides have the same total'];
+                        } else if (mathCon && mathCon.includes('decode')) {
+                            actionExamples = ['Secret codes use number patterns - players crack the code to unlock messages', 'Players create their own pattern-based puzzles for opponents', 'Pattern sequences reveal passwords or coordinates'];
+                        } else if (mathCon && mathCon.includes('extending a pattern')) {
+                            actionExamples = ['Pattern appears on a wall - players must add the next tiles correctly', "Sequences of enemies appear - extend the pattern to predict what's next", 'Musical notes follow a pattern - play the next notes correctly'];
+                        } else if (mathCon && mathCon.includes('rule that creates')) {
+                            actionExamples = ['Players see a sequence and must identify the rule (add 5, multiply by 2, etc.)', 'Each pattern has a hidden rule - discovering it unlocks the next level', 'Players test different rules to see which one explains the pattern'];
+                        } else if (mathCon && mathCon.includes('breaks the pattern')) {
+                            actionExamples = ["Series of numbers or shapes - one doesn't fit, players find it", 'Pattern sequences have one error - spotting it earns bonus points', "Players debug patterns by finding and fixing what's wrong"];
+                        } else if (mathCon && mathCon.includes('compare prices')) {
+                            actionExamples = ['Three stores sell the same item at different prices - players calculate the best deal', 'Bulk discounts available - players determine if buying more is actually cheaper', 'Players compare unit prices to decide which package is the best value'];
+                        } else if (mathCon && mathCon.includes('budgeting')) {
+                            actionExamples = ['Players have 50 coins to spend and must choose items without going over', 'Monthly budget challenge - players allocate money to different categories', 'Players plan purchases across multiple turns while staying within budget'];
+                        } else if (mathCon && mathCon.includes('earning, saving, and spending')) {
+                            actionExamples = ['Players decide whether to spend money now or save for a better item later', 'Earning interest on savings vs. buying upgrades immediately', 'Players balance spending on immediate needs vs. long-term goals'];
+                        } else if (mathCon && mathCon.includes('convert between different units')) {
+                            actionExamples = ['Recipe requires converting tablespoons to cups', 'Race distances given in different units - convert to compare', 'Time challenges require converting between hours, minutes, and seconds'];
+                        } else if (mathCon && mathCon.includes('estimating measurements')) {
+                            actionExamples = ['Players estimate distances before measuring - closer estimates earn more points', 'Guess the weight before checking - within 10% earns bonus', 'Estimate time needed before starting - meeting estimate earns rewards'];
+                        } else if (mathCon && mathCon.includes('comparing measurements')) {
+                            actionExamples = ['Players choose the longer rope, heavier box, or faster vehicle by comparing measurements', 'Sorting objects by size, weight, or speed', 'Racing requires comparing speeds to choose the best vehicle'];
+                        } else if (mathCon && mathCon.includes('scale things')) {
+                            actionExamples = ['Recipe serves 4 people - scale it up to serve 10 people', 'Magic potion doubles size - scale all measurements by 2:1', 'Shrink ray changes ratios - players calculate new dimensions'];
+                        } else {
+                            actionExamples = [`Players solve ${topic} problems to advance through levels`, `Each challenge requires using ${topic} to succeed`, `${topic} calculations unlock new abilities`];
+                        }
+
+                        // QUESTION 5: Motivation - Based on motivation constraint
+                        const motCon = motivationConstraint;
+                        let engagementExamples;
+                        if (motCon && motCon.includes('character or creature')) {
+                            engagementExamples = ['Players earn points to feed, upgrade, and grow their pet character', 'The character reacts happily when players succeed and sadly when they struggle', 'Players unlock new accessories and items for their character as they progress'];
+                        } else if (motCon && motCon.includes('unlock a story')) {
+                            engagementExamples = ['Every 3 correct problems reveals the next paragraph of a mystery story', 'Players discover what happened to the missing explorer by completing challenges', 'Each level unlocks a new chapter revealing why the island appeared'];
+                        } else if (motCon && motCon.includes('mystery')) {
+                            engagementExamples = ['Solving math problems provides clues about who stole the treasure', 'Each correct answer reveals a piece of evidence to crack the case', 'Players must figure out the secret code by collecting math-based hints'];
+                        } else if (motCon && motCon.includes('expert')) {
+                            engagementExamples = ['Players earn titles like "Fraction Master" or "Ratio Expert" as they improve', 'The game calls players "The Calculator" or "Math Detective" based on their skills', 'Players unlock an expert mode where they can help other characters solve problems'];
+                        } else if (motCon && motCon.includes('visual progress')) {
+                            engagementExamples = ['Progress bar fills up with colorful sections as players complete problems', 'Players build a tower that grows taller with each correct answer', 'A map reveals more territory as players advance through levels'];
+                        } else if (motCon && motCon.includes('customize or build')) {
+                            engagementExamples = ['Players design their own avatar with unlockable clothing and accessories', 'Players build and decorate their own virtual room or house', "Players create a custom spaceship by choosing different parts they've earned"];
+                        } else if (motCon && motCon.includes('combo moves or streaks')) {
+                            engagementExamples = ['Getting 3 correct answers in a row triggers a "Math Streak!" with bonus points and fireworks', 'Five correct problems in a row unlocks a power-up that makes the next problems easier', 'Solving problems quickly builds a multiplier (x2, x3, x4) that increases points'];
+                        } else if (motCon && motCon.includes('choices')) {
+                            engagementExamples = ['Players choose which path to take - each leads to different types of problems and rewards', 'Players decide whether to take an easy problem for small rewards or hard problem for big rewards', 'Players vote on which challenge to face next'];
+                        } else if (motCon && motCon.includes('collect things')) {
+                            engagementExamples = ['Players collect stars that unlock new power-ups like hints or time freezes', 'Gathering coins lets players buy abilities like "skip problem" or "reveal answer"', 'Finding keys unlocks new areas with different types of challenges'];
+                        } else if (motCon && motCon.includes('mistakes funny')) {
+                            engagementExamples = ['Wrong answers trigger silly animations (character slips on banana peel, bonks head)', 'Mistakes play goofy sound effects and humorous messages like "Oops! Try again, Math Wizard!"', 'The character makes a funny face or joke when players get problems wrong'];
+                        } else if (motCon && motCon.includes('past score')) {
+                            engagementExamples = ['Game shows "Your Best: 87 points" and "Current: 72 points" - can you beat yourself?', 'Players see a ghost of their previous attempt racing alongside them', 'Leaderboard shows personal records: "Your Top 5 Scores"'];
+                        } else if (motCon && motCon.includes('risk-reward')) {
+                            engagementExamples = ['Players choose between an easy problem worth 10 points or a hard problem worth 50 points', "Players can bet points on whether they'll get the next problem right", 'Players decide whether to bank their current points or risk them for a multiplier'];
+                        } else if (motCon && motCon.includes('Celebrate small wins')) {
+                            engagementExamples = ['Each correct answer triggers confetti, sparkles, or cheerful sounds', 'Completing 5 problems unlocks a celebration animation', 'Points appear with satisfying pop sounds and visual effects'];
+                        } else if (motCon && motCon.includes('second chance')) {
+                            engagementExamples = ['Players earn hint tokens they can use when stuck', 'After two wrong answers, game offers a "use a lifeline" option', 'Players can spend earned points to reveal part of the answer'];
+                        } else if (motCon && motCon.includes('gradually')) {
+                            engagementExamples = ['First 3 problems are simple, next 3 add one new element, then difficulty increases', 'Game starts with single-digit numbers, then introduces double-digits, then fractions', 'Early levels give unlimited time, later levels add gentle time pressure'];
+                        } else {
+                            engagementExamples = ['Players see their progress visualized in satisfying ways', 'The game provides instant feedback and celebrates wins', 'Rewards and achievements keep players coming back'];
+                        }
+
+                        const otherExamples = ['The game has bright colors and fun animations', 'Players can choose difficulty levels', 'There are bonus rounds for extra points', 'The game saves progress automatically'];
+
+                        return {
+                            'players': playerExamples,
+                            'goal': goalExamples,
+                            'turns': turnsExamples,
+                            'actions': actionExamples,
+                            'engagement': engagementExamples,
+                            'other': otherExamples
+                        };
+                    };
+
+                    const fallbackExamples = generateContextualExamples();
+
+                    setAiExamples({ ...aiExamples, [key]: fallbackExamples[key] || [] });
+                }
+
+                setLoading({ ...loading, [key]: false });
+            };
+
+            const getExamplesForPrompt = (key) => {
+                return aiExamples[key] || [];
+            };
+
+            return React.createElement('div', { className: 'page-container' },
+                React.createElement(ProgressIndicator, { currentPage: 3 }),
+                React.createElement('div', { className: 'pixel-border' },
+                    React.createElement('h1', { className: 'page-title' }, 'LEVEL 3: BUILD YOUR GAME'),
+                    React.createElement('div', { className: 'constraints-display' },
+                        React.createElement('h3', null, 'YOUR POWER-UPS:'),
+                        React.createElement('div', null, `📚 MATH TOPIC: ${selectedTopic}`),
+                        React.createElement('div', null, `⭐ MOTIVATION CHALLENGE: ${motivationConstraint}`),
+                        React.createElement('div', null, `🔢 MATH CHALLENGE: ${mathConstraint}`)
+                    ),
+                    prompts.slice(0, currentPromptIndex + 1).map((prompt, index) =>
+                        React.createElement('div', { key: prompt.key, className: 'prompt-section' },
+                            React.createElement('div', { className: 'prompt-label' }, prompt.label),
+                            prompt.multiline ?
+                                React.createElement('textarea', {
+                                    className: 'textarea-input',
+                                    value: gameData[prompt.key] || '',
+                                    onChange: (e) => handleInputChange(prompt.key, e.target.value),
+                                    placeholder: 'Type your answer here...'
+                                }) :
+                                React.createElement('input', {
+                                    type: 'text',
+                                    className: 'text-input',
+                                    value: gameData[prompt.key] || '',
+                                    onChange: (e) => handleInputChange(prompt.key, e.target.value),
+                                    placeholder: 'Type your answer here...'
+                                }),
+                            prompt.hint && React.createElement('div', { className: 'prompt-hint' }, prompt.hint),
+                            React.createElement('button', {
+                                className: 'inspiration-button',
+                                onClick: () => toggleExamples(prompt.key)
+                            }, `${showExamples[prompt.key] ? '▼' : '▶'} Need inspiration? 💡`),
+                            React.createElement('div', { className: `examples-container ${showExamples[prompt.key] ? 'show' : ''}` },
+                                loading[prompt.key] ?
+                                    React.createElement('div', { className: 'loading' }, 'Loading examples...') :
+                                    React.createElement('ul', null,
+                                        getExamplesForPrompt(prompt.key).map((example, i) =>
+                                            React.createElement('li', { key: i }, example)
+                                        )
+                                    )
+                            ),
+                            index === currentPromptIndex && gameData[prompt.key] && index < prompts.length - 1 &&
+                            React.createElement('button', { className: 'game-button', onClick: handleContinue }, 'CONTINUE →')
+                        )
+                    ),
+                    currentPromptIndex === prompts.length - 1 && gameData[currentPrompt.key] &&
+                    React.createElement('button', { className: 'game-button', onClick: onNext }, 'GENERATE MY GAME! 🎮')
+                )
+            );
+        }
+
+        // Page 4: Final Prompt Display
+        function Page4({ selectedTopic, motivationConstraint, mathConstraint, gameData, onRestart }) {
+            const [copied, setCopied] = useState(false);
+
+            const finalPrompt = `Create a math game with the following specifications:
+
+NUMBER OF PLAYERS: ${gameData.players}
+
+GOAL: ${gameData.goal}
+
+WHAT HAPPENS ON EACH TURN: ${gameData.turns}
+
+MATH INTEGRATION: ${gameData.actions}
+
+MOTIVATION/ENGAGEMENT: ${gameData.engagement}
+
+${gameData.other ? `ADDITIONAL INFORMATION: ${gameData.other}` : ''}
+
+REQUIRED FEATURES:
+- MOTIVATION CHALLENGE: ${motivationConstraint}
+- MATH CHALLENGE: ${mathConstraint}
+- MATH TOPIC: Players will practice ${selectedTopic}`;
+
+            const handleCopy = () => {
+                navigator.clipboard.writeText(finalPrompt);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
+
+            return React.createElement('div', { className: 'page-container' },
+                React.createElement(ProgressIndicator, { currentPage: 4 }),
+                React.createElement('div', { className: 'pixel-border' },
+                    React.createElement('h1', { className: 'page-title' }, '🎮 GAME UNLOCKED! 🎮'),
+                    React.createElement('div', { className: 'final-prompt-box' }, finalPrompt),
+                    React.createElement('div', { style: { textAlign: 'center' } },
+                        React.createElement('button', {
+                            className: `game-button copy-button ${copied ? 'copied' : ''}`,
+                            onClick: handleCopy
+                        }, copied ? '✓ COPIED!' : 'COPY TO CLIPBOARD 📋'),
+                        React.createElement('button', {
+                            className: 'game-button retry-button',
+                            onClick: onRestart
+                        }, 'START OVER 🔄')
+                    ),
+                    React.createElement('p', { className: 'page-instructions', style: { marginTop: '30px' } }, 'Paste this into Lovable.dev to start coding your game!')
+                )
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [currentPage, setCurrentPage] = useState(1);
+            const [selectedTopic, setSelectedTopic] = useState(null);
+            const [motivationConstraint, setMotivationConstraint] = useState(null);
+            const [mathConstraint, setMathConstraint] = useState(null);
+            const [gameData, setGameData] = useState({
+                setting: '',
+                players: '',
+                goal: '',
+                actions: '',
+                engagement: ''
+            });
+
+            const randomizeConstraints = () => {
+                const randomMotivation = motivationConstraints[Math.floor(Math.random() * motivationConstraints.length)];
+                const mathConstraintsForTopic = mathConstraintsByTopic[selectedTopic] || [];
+                const randomMath = mathConstraintsForTopic[Math.floor(Math.random() * mathConstraintsForTopic.length)];
+
+                setMotivationConstraint(randomMotivation);
+                setMathConstraint(randomMath);
+            };
+
+            const handleRestart = () => {
+                setCurrentPage(1);
+                setSelectedTopic(null);
+                setMotivationConstraint(null);
+                setMathConstraint(null);
+                setGameData({
+                    setting: '',
+                    players: '',
+                    goal: '',
+                    actions: '',
+                    engagement: ''
+                });
+            };
+
+            return React.createElement(React.Fragment, null,
+                currentPage === 1 && React.createElement(Page1, {
+                    selectedTopic,
+                    onSelectTopic: setSelectedTopic,
+                    onNext: () => {
+                        setCurrentPage(2);
+                        // Don't randomize here - let the user click the boxes
+                    }
+                }),
+                currentPage === 2 && React.createElement(Page2, {
+                    selectedTopic,
+                    motivationConstraint,
+                    mathConstraint,
+                    onSetMotivationConstraint: setMotivationConstraint,
+                    onSetMathConstraint: setMathConstraint,
+                    onReset: () => {
+                        setMotivationConstraint(null);
+                        setMathConstraint(null);
+                    },
+                    onNext: () => setCurrentPage(3)
+                }),
+                currentPage === 3 && React.createElement(Page3, {
+                    selectedTopic,
+                    motivationConstraint,
+                    mathConstraint,
+                    gameData,
+                    onUpdateGameData: setGameData,
+                    onNext: () => setCurrentPage(4)
+                }),
+                currentPage === 4 && React.createElement(Page4, {
+                    selectedTopic,
+                    motivationConstraint,
+                    mathConstraint,
+                    gameData,
+                    onRestart: handleRestart
+                })
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(React.createElement(App), document.getElementById('app'));
+    </script>
+</body>
+</html>
