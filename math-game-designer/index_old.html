@@ -96,10 +96,10 @@
 
         .page-instructions {
             font-family: 'Comic Neue', cursive, sans-serif;
-            font-size: clamp(16px, 3vw, 20px);
+            font-size: clamp(14px, 2.5vw, 18px);
             text-align: center;
             margin-bottom: 30px;
-            color: #2a2a4a;
+            color: #4a9fb8;
             line-height: 1.6;
         }
 
@@ -112,10 +112,10 @@
         }
 
         .topic-button {
-            font-family: 'Comic Neue', cursive, sans-serif;
+            font-family: 'Chakra Petch', sans-serif;
             font-weight: 600;
             font-size: 16px;
-            padding: 20px 18px;
+            padding: 20px;
             background: linear-gradient(135deg, #a5b8f3 0%, #c8a5d4 100%);
             border: 4px solid #d0d0e0;
             box-shadow:
@@ -124,13 +124,8 @@
             color: #2a2a4a;
             cursor: pointer;
             transition: all 0.1s ease;
-            line-height: 1.5;
+            line-height: 1.4;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 165px;
         }
 
         .topic-button:hover {
@@ -435,19 +430,14 @@
             font-size: 18px;
             color: #d4a017;
             margin-bottom: 15px;
+            text-shadow: 2px 2px 0 #7a7a9a;
         }
 
         .prompt-hint {
-            font-family: 'Comic Neue', cursive, sans-serif;
-            font-size: 15px;
-            background: rgba(74, 159, 184, 0.25);
-            border-left: 4px solid #4a9fb8;
-            padding: 12px 15px;
-            margin: 15px 0;
-            color: #2a2a4a;
-            line-height: 1.7;
-            white-space: pre-line;
-            border-radius: 4px;
+            font-size: 9px;
+            color: #4a9fb8;
+            margin-top: 10px;
+            font-style: italic;
         }
 
         .text-input,
@@ -698,43 +688,6 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-
-        @keyframes celebration-pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 8px 0 rgba(122, 122, 154, 0.3); }
-            50% { transform: scale(1.02); box-shadow: 0 12px 0 rgba(122, 122, 154, 0.5); }
-        }
-
-        @keyframes sparkle {
-            0%, 100% { transform: rotate(0deg) scale(1); opacity: 1; }
-            25% { transform: rotate(-10deg) scale(1.1); opacity: 0.8; }
-            50% { transform: rotate(10deg) scale(1.2); opacity: 1; }
-            75% { transform: rotate(-10deg) scale(1.1); opacity: 0.8; }
-        }
-
-        /* Modal animations */
-        .modal-overlay {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .integration-check-modal {
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
 </head>
 <body>
@@ -749,15 +702,9 @@
 
         // Data arrays
         const mathTopics = [
-            { name: "Ratios", emoji: "⚖️", description: "Comparing amounts and making things bigger or smaller" },
-            { name: "Fractions", emoji: "🍕", description: "Splitting, comparing, and combining parts of a whole" },
-            { name: "Percentages", emoji: "📊", description: "Parts out of 100, discounts, and growth" },
-            { name: "Geometry & Angles", emoji: "📐", description: "Shapes, angles, area, and thinking about space" },
-            { name: "Graphing & Coordinates", emoji: "📍", description: "Plotting points and reading graphs" },
-            { name: "Algebraic Thinking", emoji: "🔢", description: "Finding missing numbers and balancing equations" },
-            { name: "Patterns & Sequences", emoji: "🔄", description: "Identifying rules and predicting what comes next" },
-            { name: "Money & Making Change", emoji: "💰", description: "Calculating costs, budgeting, and making change" },
-            { name: "Measurement", emoji: "📏", description: "Measuring length, time, weight, and changing units" }
+            "Ratios", "Fractions", "Percentages", "Geometry & Angles",
+            "Graphing & Coordinates", "Algebraic Thinking",
+            "Patterns & Sequences", "Money & Making Change", "Measurement"
         ];
 
         const motivationConstraints = [
@@ -866,29 +813,6 @@
             );
         }
 
-        // Page 0: Student Name
-        function Page0({ studentName, onSetStudentName, onNext }) {
-            return React.createElement('div', { className: 'page-container' },
-                React.createElement('div', { className: 'pixel-border', style: { maxWidth: '600px', margin: '0 auto' } },
-                    React.createElement('h1', { className: 'page-title' }, '🎮 GAME DESIGNER'),
-                    React.createElement('p', { className: 'page-instructions' }, 'What is your name?'),
-                    React.createElement('input', {
-                        type: 'text',
-                        className: 'text-input',
-                        value: studentName || '',
-                        onChange: (e) => onSetStudentName(e.target.value),
-                        placeholder: 'Type your name here...',
-                        style: { fontSize: '18px', padding: '20px', marginBottom: '20px' }
-                    }),
-                    React.createElement('button', {
-                        className: 'game-button',
-                        onClick: onNext,
-                        disabled: !studentName || studentName.trim() === ''
-                    }, 'START! 🚀')
-                )
-            );
-        }
-
         // Page 1: Math Topic Selection
         function Page1({ selectedTopic, onSelectTopic, onNext }) {
             return React.createElement('div', { className: 'page-container' },
@@ -896,40 +820,13 @@
                 React.createElement('div', { className: 'pixel-border' },
                     React.createElement('h1', { className: 'page-title' }, 'LEVEL 1: CHOOSE YOUR MATH POWER'),
                     React.createElement('p', { className: 'page-instructions' }, 'What math topic will players practice in your game?'),
-                    React.createElement('div', {
-                        className: 'why-matters-callout',
-                        style: {
-                            background: 'rgba(74, 159, 184, 0.2)',
-                            border: '3px solid #4a9fb8',
-                            padding: '15px',
-                            marginBottom: '25px',
-                            borderRadius: '8px',
-                            textAlign: 'center'
-                        }
-                    },
-                        React.createElement('strong', { style: { color: '#2a2a4a', fontSize: '18px' } }, '💡 Why does this matter?'),
-                        React.createElement('p', { style: { margin: '10px 0 0 0', fontSize: '16px', lineHeight: '1.6', color: '#2a2a4a' } },
-                            'Your math topic will shape your ENTIRE game! It decides what challenges players face, what plans they use, and what skills they build.'
-                        )
-                    ),
                     React.createElement('div', { className: 'topic-grid' },
                         mathTopics.map(topic =>
                             React.createElement('button', {
-                                key: topic.name,
-                                className: `topic-button ${selectedTopic === topic.name ? 'selected' : ''}`,
-                                onClick: () => onSelectTopic(topic.name)
-                            },
-                                React.createElement('div', { style: { fontSize: '32px', marginBottom: '10px' } }, topic.emoji),
-                                React.createElement('div', { style: { fontWeight: '700', marginBottom: '8px', fontSize: '18px' } }, topic.name),
-                                React.createElement('div', {
-                                    style: {
-                                        fontSize: '15px',
-                                        opacity: '0.95',
-                                        lineHeight: '1.5',
-                                        fontWeight: '400'
-                                    }
-                                }, topic.description)
-                            )
+                                key: topic,
+                                className: `topic-button ${selectedTopic === topic ? 'selected' : ''}`,
+                                onClick: () => onSelectTopic(topic)
+                            }, topic)
                         )
                     ),
                     React.createElement('button', {
@@ -1029,24 +926,7 @@
                 React.createElement(ProgressIndicator, { currentPage: 2 }),
                 React.createElement('div', { className: 'pixel-border' },
                     React.createElement('h1', { className: 'page-title' }, 'LEVEL 2: UNLOCK YOUR POWER-UPS'),
-                    React.createElement('p', { className: 'page-instructions' }, 'Click the mystery boxes to reveal your random challenges!'),
-                    React.createElement('div', {
-                        className: 'context-callout',
-                        style: {
-                            background: 'rgba(245, 181, 252, 0.2)',
-                            border: '3px solid #f5b5fc',
-                            padding: '15px',
-                            marginBottom: '25px',
-                            borderRadius: '8px',
-                            textAlign: 'center'
-                        }
-                    },
-                        React.createElement('p', { style: { margin: '0', fontSize: '17px', lineHeight: '1.7', color: '#2a2a4a' } },
-                            '✨ These challenges will make your game ',
-                            React.createElement('strong', null, 'MORE creative'),
-                            '! They give you fun design problems to solve.'
-                        )
-                    ),
+                    React.createElement('p', { className: 'page-instructions' }, 'Click the mystery boxes to reveal your random constraints!'),
                     React.createElement('div', { className: 'chest-container' },
                         React.createElement('div', { className: 'chest-wrapper' },
                             React.createElement('div', { className: 'chest-label' }, 'MOTIVATION CHALLENGE'),
@@ -1093,17 +973,12 @@
             const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
 
             const prompts = [
+                { key: 'players', label: 'How many players are there in the game?', hint: '', multiline: false },
                 { key: 'goal', label: 'What is the goal of the game? How do players win?', hint: '', multiline: true },
-                { key: 'players', label: 'How many players can play?', hint: '', multiline: false },
-                { key: 'turns', label: 'What do players do on their turn?', hint: '', multiline: true },
-                { key: 'challenge', label: 'What makes the game challenging or exciting?', hint: '', multiline: true },
-                { key: 'actions', label: 'How does math fit into your game? (Add your MATH challenge here)',
-                    hint: '💡 DESIGN TIP: Math should feel important and needed, not added at the end.\nBAD: "Answer a math problem to earn points"\nGOOD: "Calculate ratios to decide which power-up is stronger"',
-                    multiline: true },
-                { key: 'engagement', label: 'What keeps players interested and wanting to play more? (Add your MOTIVATION challenge here)',
-                    hint: '💡 DESIGN TIP: What makes players want to keep playing?\n• Progress they can see\n• Rewards that matter\n• Stories they care about\n• Challenges they can master',
-                    multiline: true },
-                { key: 'other', label: 'Any other important details?', hint: '', multiline: true }
+                { key: 'turns', label: 'What happens on each turn?', hint: '', multiline: true },
+                { key: 'actions', label: 'How will you incorporate your MATH challenge into the game?', hint: '', multiline: true },
+                { key: 'engagement', label: 'How will you incorporate your MOTIVATION challenge into the game?', hint: '', multiline: true },
+                { key: 'other', label: 'Any other information you want to provide about the game?', hint: '', multiline: true }
             ];
 
             const currentPrompt = prompts[currentPromptIndex];
@@ -1157,7 +1032,7 @@
                         const topic = selectedTopic;
                         let playerExamples, goalExamples, turnsExamples;
 
-                        // QUESTION 2 (Players): How many players? - Based on math topic
+                        // QUESTION 1: Players - Based on math topic
                         if (topic === 'Ratios') {
                             playerExamples = ['2 players competing to see who can find better deals', '1 player managing a team with different ability ratios', '2-4 players racing to complete recipes with correct ratios'];
                         } else if (topic === 'Fractions') {
@@ -1180,7 +1055,7 @@
                             playerExamples = ['1 player (single-player)', '2 players (head-to-head)', '2-4 players (small group)'];
                         }
 
-                        // QUESTION 1 (Goal): What is the goal? - Based on math topic
+                        // QUESTION 2: Goal - Based on math topic
                         if (topic === 'Ratios') {
                             goalExamples = ['First player to correctly scale 10 recipes wins', 'Collect the most efficient team by comparing player stat ratios', 'Build the tallest structure while maintaining the correct ratio of materials'];
                         } else if (topic === 'Fractions') {
@@ -1203,7 +1078,7 @@
                             goalExamples = ['Players win by collecting the most points', 'First player to reach the goal wins', 'Complete all challenges to win'];
                         }
 
-                        // QUESTION 3 (Turns): What do players do? - Based on math topic
+                        // QUESTION 3: Turns - Based on math topic
                         if (topic === 'Ratios') {
                             turnsExamples = ['Player draws two ratio cards and must decide which represents better value', 'Player receives ingredients and must scale the recipe up or down to feed the right number of people', 'Player compares speed ratios of different vehicles to choose the fastest route'];
                         } else if (topic === 'Fractions') {
@@ -1226,31 +1101,7 @@
                             turnsExamples = ['On each turn, players draw a card and solve a problem', 'Players roll dice and answer a question', 'Each turn involves completing a challenge'];
                         }
 
-                        // QUESTION 4: Challenge/Excitement - Based on math topic
-                        let challengeExamples;
-                        if (topic === 'Ratios') {
-                            challengeExamples = ['Players must quickly decide which ratio offers better value under time pressure', 'The ratios get more complex as you advance (from 2:3 to 12:18 to spot equivalents)', 'Players compete to scale recipes correctly - mistakes set you back'];
-                        } else if (topic === 'Fractions') {
-                            challengeExamples = ['Finding common denominators gets harder as fractions get more complex', 'Players race against time to combine fractions correctly', 'Random fraction challenges appear - some are easy, some are tricky'];
-                        } else if (topic === 'Percentages') {
-                            challengeExamples = ['Prices change by random percentages - players must calculate quickly', 'Multiple percentage changes stack - players must track compounding effects', 'Time pressure increases as percentage calculations become more complex'];
-                        } else if (topic === 'Geometry & Angles') {
-                            challengeExamples = ['Angles must be estimated without protractor for bonus points', 'Wind or obstacles change required angles unexpectedly', 'Players compete to hit moving targets by calculating angle and speed'];
-                        } else if (topic === 'Graphing & Coordinates') {
-                            challengeExamples = ['The grid gets larger as you advance, requiring more precise coordinate plotting', 'Opponents can block your coordinates, forcing new path calculations', 'Hidden obstacles are revealed only when you plot nearby coordinates'];
-                        } else if (topic === 'Algebraic Thinking') {
-                            challengeExamples = ['Equations get increasingly complex with multiple variables', 'Players must balance multiple equations simultaneously', 'Some equations have tricks or require working backwards'];
-                        } else if (topic === 'Patterns & Sequences') {
-                            challengeExamples = ['Patterns become more complex with multiple rules applying at once', 'Some patterns are designed to be tricky with red herrings', 'Time pressure increases as players must identify patterns faster'];
-                        } else if (topic === 'Money & Making Change') {
-                            challengeExamples = ['Customers get impatient - make change quickly or lose points', 'Players must budget limited money across multiple purchases', 'Prices fluctuate and players must decide when to buy or sell'];
-                        } else if (topic === 'Measurement') {
-                            challengeExamples = ['Players must estimate first - better estimates earn bonus points', 'Unit conversions get more complex as the game progresses', 'Limited resources force players to measure precisely'];
-                        } else {
-                            challengeExamples = ['The difficulty increases as players advance', 'Players face unexpected twists and surprises', 'Competition against others or the clock adds pressure'];
-                        }
-
-                        // QUESTION 5 (Math): How does math fit into your game? - Based on math constraint
+                        // QUESTION 4: Math Integration - Based on math constraint
                         const mathCon = mathConstraint;
                         let actionExamples;
                         if (mathCon && mathCon.includes('estimate before')) {
@@ -1331,7 +1182,7 @@
                             actionExamples = [`Players solve ${topic} problems to advance through levels`, `Each challenge requires using ${topic} to succeed`, `${topic} calculations unlock new abilities`];
                         }
 
-                        // QUESTION 6 (Motivation): What keeps players motivated? - Based on motivation constraint
+                        // QUESTION 5: Motivation - Based on motivation constraint
                         const motCon = motivationConstraint;
                         let engagementExamples;
                         if (motCon && motCon.includes('character or creature')) {
@@ -1371,10 +1222,9 @@
                         const otherExamples = ['The game has bright colors and fun animations', 'Players can choose difficulty levels', 'There are bonus rounds for extra points', 'The game saves progress automatically'];
 
                         return {
-                            'goal': goalExamples,
                             'players': playerExamples,
+                            'goal': goalExamples,
                             'turns': turnsExamples,
-                            'challenge': challengeExamples,
                             'actions': actionExamples,
                             'engagement': engagementExamples,
                             'other': otherExamples
@@ -1439,31 +1289,28 @@
                         )
                     ),
                     currentPromptIndex === prompts.length - 1 && gameData[currentPrompt.key] &&
-                    React.createElement('button', { className: 'game-button', onClick: onNext }, 'GENERATE MY PROMPT! 📝')
+                    React.createElement('button', { className: 'game-button', onClick: onNext }, 'GENERATE MY GAME! 🎮')
                 )
             );
         }
 
-
         // Page 4: Final Prompt Display
-        function Page4({ selectedTopic, motivationConstraint, mathConstraint, gameData, studentName, onRestart }) {
+        function Page4({ selectedTopic, motivationConstraint, mathConstraint, gameData, onRestart }) {
             const [copied, setCopied] = useState(false);
 
-            const finalPrompt = `${studentName}: Create a math game with the following specifications:
-
-GOAL: ${gameData.goal}
+            const finalPrompt = `Create a math game with the following specifications:
 
 NUMBER OF PLAYERS: ${gameData.players}
 
-WHAT PLAYERS DO: ${gameData.turns}
+GOAL: ${gameData.goal}
 
-WHAT MAKES IT CHALLENGING/EXCITING: ${gameData.challenge}
+WHAT HAPPENS ON EACH TURN: ${gameData.turns}
 
 MATH INTEGRATION: ${gameData.actions}
 
 MOTIVATION/ENGAGEMENT: ${gameData.engagement}
 
-${gameData.other ? `ADDITIONAL DETAILS: ${gameData.other}` : ''}
+${gameData.other ? `ADDITIONAL INFORMATION: ${gameData.other}` : ''}
 
 REQUIRED FEATURES:
 - MOTIVATION CHALLENGE: ${motivationConstraint}
@@ -1476,93 +1323,38 @@ REQUIRED FEATURES:
                 setTimeout(() => setCopied(false), 2000);
             };
 
-            const handleOpenGoogleDoc = () => {
-                window.open('https://docs.google.com/document/d/11oNqYdofy98P0z8Lnr9BMh7rIh9TB2TPwS99pdOOTyc/edit?usp=sharing', '_blank');
-            };
-
             return React.createElement('div', { className: 'page-container' },
                 React.createElement(ProgressIndicator, { currentPage: 4 }),
                 React.createElement('div', { className: 'pixel-border' },
-                    React.createElement('div', {
-                        className: 'celebration-banner',
-                        style: {
-                            background: 'linear-gradient(135deg, #f5b5fc 0%, #f9a5b4 50%, #ffd89c 100%)',
-                            padding: '20px',
-                            marginBottom: '25px',
-                            borderRadius: '10px',
-                            textAlign: 'center',
-                            animation: 'celebration-pulse 2s ease-in-out infinite',
-                            border: '4px solid #d4a017',
-                            boxShadow: '0 8px 0 rgba(122, 122, 154, 0.3)'
-                        }
-                    },
-                        React.createElement('div', { style: { fontSize: '48px', marginBottom: '10px', animation: 'sparkle 1.5s ease-in-out infinite' } }, '✨🎮✨'),
-                        React.createElement('h1', { className: 'page-title', style: { margin: '10px 0', color: '#2a2a4a' } }, 'GAME DESIGNER LEVEL UP!'),
-                        React.createElement('p', { style: { fontSize: '18px', color: '#2a2a4a', margin: '0', fontWeight: 'bold' } }, 'Your game design is complete! 🎉')
-                    ),
-                    React.createElement('div', {
-                        className: 'next-steps-section',
-                        style: {
-                            background: 'rgba(74, 159, 184, 0.2)',
-                            border: '3px solid #4a9fb8',
-                            padding: '20px',
-                            marginBottom: '25px',
-                            borderRadius: '8px'
-                        }
-                    },
-                        React.createElement('h3', { style: { color: '#2a2a4a', marginTop: '0', marginBottom: '15px', fontSize: '22px', textAlign: 'center', fontWeight: '700' } }, '🚀 NEXT STEPS'),
-                        React.createElement('ol', { style: { color: '#2a2a4a', fontSize: '17px', lineHeight: '1.8', paddingLeft: '25px' } },
-                            React.createElement('li', null, 'Copy this prompt (button below)'),
-                            React.createElement('li', null, 'Go to ', React.createElement('strong', null, 'Lovable.dev')),
-                            React.createElement('li', null, 'Paste it in'),
-                            React.createElement('li', null, 'Watch your game come to life! 🎮')
-                        ),
-                        React.createElement('p', { style: { textAlign: 'center', color: '#2a2a4a', fontSize: '16px', margin: '15px 0 0 0', fontWeight: 'bold' } }, '⏱️ Your game will be playable in about 5-10 minutes!')
-                    ),
+                    React.createElement('h1', { className: 'page-title' }, '🎮 GAME UNLOCKED! 🎮'),
                     React.createElement('div', { className: 'final-prompt-box' }, finalPrompt),
-                    React.createElement('div', { style: { textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' } },
+                    React.createElement('div', { style: { textAlign: 'center' } },
                         React.createElement('button', {
-                            className: 'game-button',
-                            onClick: handleOpenGoogleDoc,
-                            style: {
-                                fontSize: '16px',
-                                padding: '25px 40px',
-                                background: 'linear-gradient(135deg, #64ffa0 0%, #4a9fb8 100%)',
-                                boxShadow: '0 6px 0 0 #2a7a5a, 0 10px 0 0 rgba(42, 122, 90, 0.3)'
-                            }
-                        }, 'OPEN GOOGLE DOC 📄'),
-                        React.createElement('div', { style: { display: 'flex', gap: '15px' } },
-                            React.createElement('button', {
-                                className: 'game-button copy-button',
-                                onClick: handleCopy,
-                                style: { fontSize: '14px', padding: '15px 30px' }
-                            }, copied ? '✓ COPIED!' : 'COPY PROMPT 📋'),
-                            React.createElement('button', {
-                                className: 'game-button retry-button',
-                                onClick: onRestart,
-                                style: { fontSize: '14px', padding: '15px 30px' }
-                            }, 'START OVER 🔄')
-                        )
-                    )
+                            className: `game-button copy-button ${copied ? 'copied' : ''}`,
+                            onClick: handleCopy
+                        }, copied ? '✓ COPIED!' : 'COPY TO CLIPBOARD 📋'),
+                        React.createElement('button', {
+                            className: 'game-button retry-button',
+                            onClick: onRestart
+                        }, 'START OVER 🔄')
+                    ),
+                    React.createElement('p', { className: 'page-instructions', style: { marginTop: '30px' } }, 'Paste this into Lovable.dev to start coding your game!')
                 )
             );
         }
 
         // Main App Component
         function App() {
-            const [currentPage, setCurrentPage] = useState(0);
-            const [studentName, setStudentName] = useState('');
+            const [currentPage, setCurrentPage] = useState(1);
             const [selectedTopic, setSelectedTopic] = useState(null);
             const [motivationConstraint, setMotivationConstraint] = useState(null);
             const [mathConstraint, setMathConstraint] = useState(null);
             const [gameData, setGameData] = useState({
-                goal: '',
+                setting: '',
                 players: '',
-                turns: '',
-                challenge: '',
+                goal: '',
                 actions: '',
-                engagement: '',
-                other: ''
+                engagement: ''
             });
 
             const randomizeConstraints = () => {
@@ -1589,11 +1381,6 @@ REQUIRED FEATURES:
             };
 
             return React.createElement(React.Fragment, null,
-                currentPage === 0 && React.createElement(Page0, {
-                    studentName,
-                    onSetStudentName: setStudentName,
-                    onNext: () => setCurrentPage(1)
-                }),
                 currentPage === 1 && React.createElement(Page1, {
                     selectedTopic,
                     onSelectTopic: setSelectedTopic,
@@ -1627,7 +1414,6 @@ REQUIRED FEATURES:
                     motivationConstraint,
                     mathConstraint,
                     gameData,
-                    studentName,
                     onRestart: handleRestart
                 })
             );
