@@ -3,1040 +3,1552 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Game Mad Libs!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Bangers&display=swap" rel="stylesheet">
+    <title>Math Mad Libs - Prompt Engineering Game!</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Patrick Hand', cursive;
+            font-family: 'Comic Sans MS', 'Press Start 2P', cursive, sans-serif;
+            transition: background 0.5s ease;
             min-height: 100vh;
-            padding: 20px;
-            transition: background 0.8s ease;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-        }
-
-        .container { max-width: 750px; margin: 0 auto; position: relative; z-index: 10; }
-
-        .screen { display: none; text-align: center; }
-        .screen.active { display: block; animation: fadeIn 0.4s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Title Styles */
-        .title {
-            font-family: 'Bangers', cursive;
-            font-size: 4em;
-            line-height: 1;
-            margin-bottom: 10px;
-            letter-spacing: 4px;
-        }
-        .title .word1 { color: #ff6b6b; text-shadow: 4px 4px 0 #ffd93d, 6px 6px 0 #333; }
-        .title .word2 { color: #4ecdc4; text-shadow: 4px 4px 0 #6bcb77, 6px 6px 0 #333; }
-
-        .subtitle {
-            font-size: 1.4em;
-            color: white;
-            margin-bottom: 25px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        /* Cards */
-        .card {
-            background: white;
-            border: 4px solid #333;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
-        }
-
-        .card h3 {
-            font-family: 'Bangers', cursive;
-            font-size: 1.6em;
-            color: #6bcb77;
-            margin-bottom: 15px;
-        }
-
-        .tip {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            color: #333;
-            text-align: left;
-        }
-        .tip strong { color: #ff6b6b; }
-
-        /* Buttons */
-        .btn {
-            font-family: 'Bangers', cursive;
-            font-size: 1.5em;
-            background: #ff6b6b;
-            color: white;
-            border: 4px solid #333;
-            padding: 14px 40px;
-            cursor: pointer;
-            box-shadow: 5px 5px 0 #333;
-            transition: all 0.15s;
-            letter-spacing: 2px;
-            display: inline-block;
-            margin: 5px;
-        }
-        .btn:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #333; }
-        .btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 3px 3px 0 #333; }
-        .btn:disabled { background: #ccc; cursor: not-allowed; }
-        .btn-start { font-size: 2em; background: linear-gradient(135deg, #6bcb77, #4ecdc4); }
-        .btn-green { background: #6bcb77; }
-        .btn-blue { background: #4ecdc4; }
-        .btn-purple { background: #764ba2; }
-        .btn-small { font-size: 1.1em; padding: 10px 20px; }
-
-        /* Question Card */
-        .question-card {
-            background: white;
-            border: 4px solid #333;
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow: 10px 10px 0 rgba(0,0,0,0.15);
-            animation: popIn 0.35s ease;
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.85); opacity: 0; }
-            70% { transform: scale(1.02); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .round-badge {
-            display: inline-block;
-            font-family: 'Bangers', cursive;
-            padding: 6px 18px;
-            border-radius: 25px;
-            margin-bottom: 15px;
-            color: white;
-        }
-        .round-badge.r1 { background: linear-gradient(135deg, #6bcb77, #4ecdc4); }
-        .round-badge.r2 { background: linear-gradient(135deg, #4ecdc4, #54a0ff); }
-        .round-badge.r3 { background: linear-gradient(135deg, #ff6b6b, #ff9ff3); }
-
-        .progress-bar {
-            background: #e8e8e8;
-            border-radius: 25px;
-            height: 16px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            border: 3px solid #333;
-        }
-        .progress-fill { height: 100%; transition: width 0.4s ease; border-radius: 25px; }
-        .r1 .progress-fill { background: linear-gradient(90deg, #6bcb77, #4ecdc4); }
-        .r2 .progress-fill { background: linear-gradient(90deg, #4ecdc4, #54a0ff); }
-        .r3 .progress-fill { background: linear-gradient(90deg, #ff6b6b, #ff9ff3); }
-
-        .question-label {
-            font-size: 1.6em;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        .question-hint {
-            font-size: 1em;
-            color: #888;
-            font-style: italic;
-            margin-bottom: 15px;
-        }
-
-        .text-input {
-            width: 100%;
-            padding: 12px;
-            font-family: 'Patrick Hand', cursive;
-            font-size: 1.6em;
-            border: none;
-            border-bottom: 4px dashed #4ecdc4;
-            background: transparent;
-            color: #ff6b6b;
-            text-align: center;
-            outline: none;
-        }
-        .text-input:focus { border-bottom-style: solid; border-bottom-color: #ff6b6b; }
-
-        .ideas-btn {
-            font-family: 'Patrick Hand', cursive;
-            font-size: 1.1em;
-            background: #f8f8f8;
-            color: #666;
-            border: 2px dashed #ccc;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-        .ideas-btn:hover { background: #fff3cd; border-color: #ffd93d; }
-
-        .suggestions {
-            display: none;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-        .suggestions.visible { display: flex; }
-        .suggestion {
-            background: #f0f0f0;
-            padding: 6px 14px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .suggestion:hover { background: #ffd93d; transform: scale(1.05); }
-
-        /* Wheel Spinner */
-        .wheel-container {
+            padding: 15px;
             position: relative;
-            margin: 20px auto;
-        }
-        .wheel {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            border: 6px solid #333;
-            position: relative;
-            overflow: hidden;
-            margin: 0 auto;
-            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-        }
-        .wheel-segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: 100% 100%;
+            overflow-x: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9em;
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        .wheel-pointer {
+
+        /* VIDEO GAME BACKGROUNDS with ANIMATIONS */
+        body {
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255,255,255,0.03) 2px,
+                    rgba(255,255,255,0.03) 4px
+                ),
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: bgPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+            50% { filter: brightness(1.1) hue-rotate(10deg); }
+        }
+
+        body.space {
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255,255,255,0.02) 2px,
+                    rgba(255,255,255,0.02) 4px
+                ),
+                radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(0, 191, 255, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0014 0%, #1a0033 50%, #000033 100%);
+        }
+
+        body.ocean {
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(255,255,255,0.03) 3px,
+                    rgba(255,255,255,0.03) 6px
+                ),
+                radial-gradient(circle at 40% 60%, rgba(0, 191, 255, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(32, 178, 170, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #001a33 0%, #0066cc 50%, #003d5c 100%);
+        }
+
+        body.candy {
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255,255,255,0.05) 10px,
+                    rgba(255,255,255,0.05) 20px
+                ),
+                radial-gradient(circle at 25% 35%, rgba(255, 215, 0, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 105, 180, 0.5) 0%, transparent 50%),
+                linear-gradient(135deg, #ff0080 0%, #ff69b4 50%, #ffd700 100%);
+        }
+
+        body.haunted {
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 5px,
+                    rgba(50, 205, 50, 0.03) 5px,
+                    rgba(50, 205, 50, 0.03) 10px
+                ),
+                radial-gradient(circle at 35% 45%, rgba(138, 43, 226, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 65% 65%, rgba(50, 205, 50, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #1a0033 0%, #4b0082 50%, #2d5016 100%);
+        }
+
+        body.jungle {
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 4px,
+                    rgba(173, 255, 47, 0.04) 4px,
+                    rgba(173, 255, 47, 0.04) 8px
+                ),
+                radial-gradient(circle at 30% 50%, rgba(173, 255, 47, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(34, 139, 34, 0.5) 0%, transparent 50%),
+                linear-gradient(135deg, #0d3d0d 0%, #228b22 50%, #004d00 100%);
+        }
+
+        /* Floating particles */
+        .theme-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            font-size: 1.5em;
+            opacity: 0.75;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
+            animation: particleFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-30px) rotate(90deg) scale(1.2);
+            }
+            50% { 
+                transform: translateY(-60px) rotate(180deg) scale(1);
+            }
+            75% {
+                transform: translateY(-30px) rotate(270deg) scale(0.8);
+            }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* VIDEO GAME CARD with pixel corners and glow */
+        .card {
+            background: 
+                linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(245,245,255,0.98) 100%);
+            border-radius: 25px;
+            padding: 30px 40px;
+            box-shadow: 
+                0 0 0 5px rgba(78, 205, 196, 0.6),
+                0 0 0 8px rgba(255, 107, 107, 0.4),
+                0 20px 80px rgba(0,0,0,0.6),
+                inset 0 -5px 20px rgba(78, 205, 196, 0.1);
+            position: relative;
+            animation: cardPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 0 5px rgba(78, 205, 196, 0.6),
+                    0 0 0 8px rgba(255, 107, 107, 0.4),
+                    0 20px 80px rgba(0,0,0,0.6),
+                    inset 0 -5px 20px rgba(78, 205, 196, 0.1);
+            }
+            50% { 
+                transform: scale(1.02);
+                box-shadow: 
+                    0 0 0 6px rgba(78, 205, 196, 0.8),
+                    0 0 0 10px rgba(255, 107, 107, 0.6),
+                    0 25px 90px rgba(0,0,0,0.7),
+                    inset 0 -5px 25px rgba(78, 205, 196, 0.2);
+            }
+        }
+
+        /* Pixel art corners */
+        .card::before,
+        .card::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 5px solid #ff6b6b;
+            z-index: 10;
+        }
+
+        .card::before {
+            top: -3px;
+            left: -3px;
+            border-right: none;
+            border-bottom: none;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+        }
+
+        .card::after {
+            bottom: -3px;
+            right: -3px;
+            border-left: none;
+            border-top: none;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+        }
+
+        /* GLOWING TITLE */
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            background: linear-gradient(45deg, 
+                #ff0080 0%, 
+                #ff8c00 20%, 
+                #ffd700 40%, 
+                #00ff00 60%, 
+                #00bfff 80%, 
+                #ff0080 100%);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+            animation: rainbowShift 3s ease infinite, titleFloat 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.6));
+            text-transform: uppercase;
+        }
+
+        @keyframes rainbowShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
+        }
+
+        /* How to Play Box */
+        .how-to-play {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8b3 100%);
+            border: 4px solid #ff6b6b;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 
+                0 8px 0 #cc5555,
+                0 10px 30px rgba(255, 107, 107, 0.4);
+            position: relative;
+        }
+
+        .how-to-play::before {
+            content: '★';
             position: absolute;
             top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid #333;
-            z-index: 10;
-        }
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            background: #333;
+            font-size: 2em;
+            background: #ff6b6b;
+            color: white;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.6);
+            animation: starSpin 3s linear infinite;
         }
-        .wheel-result {
-            font-family: 'Bangers', cursive;
-            font-size: 1.5em;
+
+        @keyframes starSpin {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            50% { transform: translateX(-50%) rotate(180deg); }
+        }
+
+        .how-to-play h3 {
             color: #ff6b6b;
-            margin-top: 15px;
-            min-height: 1.5em;
-        }
-
-        /* Slot Machine */
-        .slot-machine {
-            background: linear-gradient(180deg, #333, #555);
-            border-radius: 15px;
-            padding: 20px;
-            display: inline-block;
-            margin: 20px auto;
-            border: 4px solid #ffd93d;
-        }
-        .slot-reels {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
             display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 10px;
-            justify-content: center;
-        }
-        .slot-reel {
-            width: 80px;
-            height: 60px;
-            background: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1em;
-            font-weight: bold;
-            overflow: hidden;
-            border: 3px solid #333;
-        }
-        .slot-reel.spinning {
-            animation: slotSpin 0.1s linear infinite;
-        }
-        @keyframes slotSpin {
-            0% { transform: translateY(-5px); }
-            50% { transform: translateY(5px); }
-            100% { transform: translateY(-5px); }
-        }
-        .slot-result {
-            font-family: 'Bangers', cursive;
-            font-size: 1.3em;
-            color: #ffd93d;
-            margin-top: 15px;
         }
 
-        /* Random Generator */
-        .generator-box {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px auto;
-            max-width: 350px;
+        .how-to-play ul {
+            list-style: none;
+            font-size: 1.05em;
+            line-height: 2;
         }
-        .generator-result {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.4em;
-            color: #333;
-            margin-top: 15px;
-            min-height: 50px;
+
+        .how-to-play li {
+            margin: 15px 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 10px;
+            transition: transform 0.2s;
         }
-        .generator-result.spinning {
-            animation: pulse 0.2s ease infinite;
+
+        .how-to-play li:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.8);
         }
-        @keyframes pulse {
+
+        .how-to-play li .emoji {
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        .how-to-play li strong {
+            color: #ff6b6b;
+        }
+
+        /* VIDEO GAME BUTTONS with 3D effect */
+        .btn {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', cursive;
+            display: block;
+            margin: 20px auto;
+            position: relative;
+            border: 4px solid rgba(255,255,255,0.4);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            box-shadow: 
+                0 6px 0 #2d8b7e,
+                0 8px 25px rgba(78, 205, 196, 0.5),
+                inset 0 -3px 10px rgba(0,0,0,0.2);
+            transition: all 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            border-radius: 50px 50px 0 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 9px 0 #2d8b7e,
+                0 11px 30px rgba(78, 205, 196, 0.7),
+                inset 0 -3px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 
+                0 3px 0 #2d8b7e,
+                0 5px 15px rgba(78, 205, 196, 0.5),
+                inset 0 -3px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Progress bar - GAME STYLE */
+        .progress-container {
+            margin-bottom: 40px;
+        }
+
+        .progress-label {
+            text-align: center;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: block;
+            width: fit-content;
+            margin: 0 auto 25px;
+            border: 4px solid rgba(255,255,255,0.5);
+            box-shadow: 
+                0 6px 0 #cc4040,
+                0 8px 25px rgba(255, 107, 107, 0.5);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            animation: labelBounce 2s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes labelBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .progress-bar-bg {
+            background: #2d2d2d;
+            height: 22px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 4px solid #666;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, 
+                #00ff00 0%, 
+                #ffff00 25%, 
+                #ff8c00 50%, 
+                #ff0080 75%, 
+                #00ff00 100%);
+            background-size: 300% 100%;
+            height: 100%;
+            border-radius: 11px;
+            transition: width 0.5s ease;
+            animation: progressRainbow 2s linear infinite;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 0, 0.8),
+                inset 0 2px 5px rgba(255,255,255,0.5);
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+            border-radius: 11px 11px 0 0;
+        }
+
+        @keyframes progressRainbow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
+        }
+
+        /* Question display */
+        .question-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .question-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            text-shadow: 
+                3px 3px 0 rgba(78, 205, 196, 0.3),
+                -1px -1px 0 #fff;
+            animation: questionPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes questionPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
 
-        /* Story Display */
-        .story-card {
-            background: #fffef0;
-            border: 4px solid #333;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-            text-align: left;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+        .question-subtext {
+            font-size: 1.15em;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 30px;
         }
+
+        .input-container {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.4em;
+            border: none;
+            border-bottom: 4px solid #ff6b6b;
+            background: rgba(255,255,255,0.8);
+            text-align: center;
+            font-family: 'Comic Sans MS', cursive;
+            color: #333;
+            transition: all 0.3s;
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        input[type="text"]::placeholder {
+            color: #bbb;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-bottom-color: #4ecdc4;
+            background: rgba(255,255,255,1);
+            box-shadow: 
+                inset 0 2px 8px rgba(0,0,0,0.1),
+                0 0 20px rgba(78, 205, 196, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .ideas-btn {
+            background: white;
+            color: #666;
+            border: 3px dashed #ccc;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-family: 'Comic Sans MS', cursive;
+            margin-top: 20px;
+            display: inline-block;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .ideas-btn:hover {
+            border-color: #4ecdc4;
+            color: #4ecdc4;
+            background: #f0f0f0;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .suggestions {
+            position: absolute;
+            z-index: 100;
+            left: 0;
+            right: 0;
+            margin-top: 10px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+            border-radius: 20px;
+            border: 3px solid #4ecdc4;
+            display: none;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.5);
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestions.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            display: inline-block;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            padding: 12px 25px;
+            margin: 7px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 
+                0 4px 0 #2d8b7e,
+                0 6px 15px rgba(78, 205, 196, 0.4);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .suggestion-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 7px 0 #2d8b7e,
+                0 9px 20px rgba(78, 205, 196, 0.6);
+        }
+
+        .suggestion-item:active {
+            transform: translateY(2px);
+            box-shadow: 
+                0 2px 0 #2d8b7e,
+                0 4px 10px rgba(78, 205, 196, 0.4);
+        }
+
+        /* Spinning Wheel - PIE CHART */
+        .wheel-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .wheel {
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            margin: 30px auto;
+            position: relative;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow: 
+                0 0 0 8px rgba(255,255,255,0.6),
+                0 0 0 12px rgba(78, 205, 196, 0.4),
+                0 15px 60px rgba(0,0,0,0.5),
+                inset 0 0 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 6px solid rgba(255,255,255,0.8);
+        }
+
+        /* Space wheel */
+        .wheel.space {
+            background: 
+                conic-gradient(
+                    from 0deg,
+                    #667eea 0deg 60deg,
+                    #764ba2 60deg 120deg,
+                    #f093fb 120deg 180deg,
+                    #667eea 180deg 240deg,
+                    #764ba2 240deg 300deg,
+                    #f093fb 300deg 360deg
+                );
+        }
+
+        .wheel.ocean {
+            background: 
+                conic-gradient(
+                    from 0deg,
+                    #0077be 0deg 60deg,
+                    #00bfff 60deg 120deg,
+                    #4dd0e1 120deg 180deg,
+                    #0077be 180deg 240deg,
+                    #00bfff 240deg 300deg,
+                    #4dd0e1 300deg 360deg
+                );
+        }
+
+        .wheel.candy {
+            background: 
+                conic-gradient(
+                    from 0deg,
+                    #ff69b4 0deg 60deg,
+                    #ffd700 60deg 120deg,
+                    #ff1493 120deg 180deg,
+                    #ff69b4 180deg 240deg,
+                    #ffd700 240deg 300deg,
+                    #ff1493 300deg 360deg
+                );
+        }
+
+        .wheel.haunted {
+            background: 
+                conic-gradient(
+                    from 0deg,
+                    #9370db 0deg 60deg,
+                    #32cd32 60deg 120deg,
+                    #ba55d3 120deg 180deg,
+                    #9370db 180deg 240deg,
+                    #32cd32 240deg 300deg,
+                    #ba55d3 300deg 360deg
+                );
+        }
+
+        .wheel.jungle {
+            background: 
+                conic-gradient(
+                    from 0deg,
+                    #228b22 0deg 60deg,
+                    #adff2f 60deg 120deg,
+                    #32cd32 120deg 180deg,
+                    #228b22 180deg 240deg,
+                    #adff2f 240deg 300deg,
+                    #32cd32 300deg 360deg
+                );
+        }
+
+        /* Center target */
+        .wheel::after {
+            content: '🎯';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 4px solid #ff6b6b;
+        }
+
+        .wheel-result,
+        .generator-result {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #fff;
+            margin: 30px auto;
+            padding: 25px 35px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border-radius: 20px;
+            display: none;
+            max-width: 600px;
+            box-shadow: 
+                0 8px 0 #cc4040,
+                0 10px 35px rgba(255, 107, 107, 0.6);
+            text-align: center;
+            border: 4px solid rgba(255,255,255,0.4);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .wheel-result.show,
+        .generator-result.show {
+            display: block;
+            animation: resultPop 0.5s ease;
+        }
+
+        @keyframes resultPop {
+            0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+            60% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Story */
         .story-title {
-            font-family: 'Bangers', cursive;
-            font-size: 1.5em;
-            color: #6bcb77;
-            margin-bottom: 15px;
+            font-size: 1.8em;
+            color: #ff6b6b;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 3px 3px 0 rgba(78, 205, 196, 0.3);
+        }
+
+        .story {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 25px 30px;
+            border-radius: 20px;
+            border: 4px solid #4ecdc4;
+            line-height: 1.8;
+            font-size: 1.05em;
+            box-shadow: 
+                0 8px 0 #2d8b7e,
+                0 10px 35px rgba(78, 205, 196, 0.4);
+        }
+
+        .story-word {
+            color: #ff6b6b;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe4a0 100%);
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 2px solid #ff6b6b;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .question-block {
+            margin: 35px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            border-left: 8px solid #4ecdc4;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .question-label {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Prompts grid */
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .prompt-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 20px;
+            border: 4px solid #4ecdc4;
+            box-shadow: 
+                0 6px 0 #2d8b7e,
+                0 8px 30px rgba(78, 205, 196, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .prompt-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 12px;
             text-align: center;
         }
-        .story-text {
-            font-size: 1.25em;
-            line-height: 1.8;
-            color: #333;
-        }
-        .filled-word {
-            font-family: 'Bangers', cursive;
-            color: #ff6b6b;
-            background: linear-gradient(135deg, #fff3cd, #ffe8a1);
-            padding: 2px 8px;
-            border-radius: 5px;
-        }
 
-        /* Prompts Display */
-        .prompts-container {
-            display: grid;
-            gap: 20px;
-        }
-        .prompt-card {
-            background: white;
-            border: 4px solid #333;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: left;
-        }
-        .prompt-header {
-            font-family: 'Bangers', cursive;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 3px dashed #eee;
-        }
-        .prompt-header.p1 { color: #6bcb77; }
-        .prompt-header.p2 { color: #4ecdc4; }
-        .prompt-header.p3 { color: #ff6b6b; }
         .prompt-text {
-            font-size: 1.1em;
-            line-height: 1.7;
-            color: #333;
-            white-space: pre-wrap;
-        }
-
-        .copy-success {
-            color: #6bcb77;
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
             font-size: 0.9em;
-            margin-top: 10px;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 3px solid #ddd;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .prompt-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .prompt-text::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .prompt-text::-webkit-scrollbar-thumb {
+            background: #4ecdc4;
+            border-radius: 10px;
+        }
+        
+        .prompt-text::-webkit-scrollbar-thumb:hover {
+            background: #44a08d;
         }
 
-        .final-message {
-            background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+        .explanation {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe4a0 100%);
+            border: 3px solid #ff6b6b;
             border-radius: 15px;
-            padding: 20px;
+            padding: 18px 20px;
+            margin: 25px 0;
+            font-size: 1.05em;
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: 
+                0 6px 0 #cc5555,
+                0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
             margin: 20px 0;
+        }
+
+        .page-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
             font-size: 1.2em;
+            font-weight: bold;
+            z-index: 100;
+            border: 4px solid rgba(255,255,255,0.5);
+            box-shadow: 
+                0 6px 0 #4a3580,
+                0 8px 25px rgba(102, 126, 234, 0.6);
+            animation: indicatorFloat 2s ease-in-out infinite;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .title { font-size: 2.8em; }
-            .wheel { width: 200px; height: 200px; }
-            .slot-reel { width: 60px; height: 50px; font-size: 0.8em; }
+        @keyframes indicatorFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
-        /* Animations */
-        .wiggle { display: inline-block; animation: wiggle 0.6s ease-in-out infinite; }
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .card {
+                padding: 30px 25px;
+            }
+
+            .btn {
+                font-size: 1.2em;
+                padding: 18px 40px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="page-indicator" id="pageIndicator">1/28</div>
+
     <div class="container">
-        <!-- ===== START SCREEN ===== -->
-        <div class="screen active" id="startScreen">
-            <h1 class="title"><span class="word1">MAD</span> <span class="word2">LIBS!</span></h1>
-            <p class="subtitle">Learn to talk to AI like a pro! <span class="wiggle">🤖</span></p>
-
-            <div class="card">
-                <h3>🎯 HOW TO PLAY</h3>
-                <div class="tip"><span>🙈</span><span><strong>DON'T peek ahead!</strong> That ruins the fun!</span></div>
-                <div class="tip"><span>✨</span><span><strong>Be SPECIFIC!</strong> Say "sparkly unicorn" not just "animal"</span></div>
-                <div class="tip"><span>💭</span><span><strong>First thought = best thought!</strong> Don't overthink it!</span></div>
-                <div class="tip"><span>🎢</span><span><strong>3 rounds</strong> of increasing creativity!</span></div>
-                <div class="tip"><span>🚀</span><span><strong>Turn your stories</strong> into REAL game prompts!</span></div>
-            </div>
-
-            <button class="btn btn-start" onclick="startGame()">LET'S GO! 🚀</button>
-        </div>
-
-        <!-- ===== QUESTION SCREEN ===== -->
-        <div class="screen" id="questionScreen">
-            <div class="question-card" id="questionCard">
-                <span class="round-badge r1" id="roundBadge">ROUND 1</span>
-                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-                <div id="questionContent">
-                    <!-- Dynamic content goes here -->
+        <!-- Homepage -->
+        <div id="homepage" class="card">
+            <h1 style="font-size: 3em; margin-bottom: 3px; letter-spacing: 2px;">🎮 Math Mad Libs 🎮</h1>
+            <div class="subtitle" style="font-size: 1.2em; margin-bottom: 15px; color: #ff6b6b; font-weight: 600;">Turn YOUR ideas into AI game prompts!</div>
+            
+            <div class="how-to-play" style="background: linear-gradient(135deg, #e8f5ff 0%, #d4edff 100%); border: 3px solid #4ecdc4; border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);">
+                <div style="text-align: center; margin-bottom: 12px;">
+                    <span style="font-size: 1.8em;">✨</span>
+                    <div style="font-size: 1em; font-weight: 600; color: #333; margin-top: 3px;">You'll answer fun questions like:</div>
                 </div>
-
-                <button class="btn" id="nextBtn" onclick="nextQuestion()">NEXT →</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                    <div style="background: white; padding: 8px 10px; border-radius: 12px; border: 2px solid #ffd93d; text-align: center;">
+                        <div style="font-size: 1.2em; margin-bottom: 2px;">🦄</div>
+                        <div style="color: #555;">Pick a silly animal</div>
+                    </div>
+                    <div style="background: white; padding: 8px 10px; border-radius: 12px; border: 2px solid #ff6b6b; text-align: center;">
+                        <div style="font-size: 1.2em; margin-bottom: 2px;">🌟</div>
+                        <div style="color: #555;">Choose a fun place</div>
+                    </div>
+                    <div style="background: white; padding: 8px 10px; border-radius: 12px; border: 2px solid #4ecdc4; text-align: center;">
+                        <div style="font-size: 1.2em; margin-bottom: 2px;">🎲</div>
+                        <div style="color: #555;">Spin fun wheels</div>
+                    </div>
+                    <div style="background: white; padding: 8px 10px; border-radius: 12px; border: 2px solid #a855f7; text-align: center;">
+                        <div style="font-size: 1.2em; margin-bottom: 2px;">🚀</div>
+                        <div style="color: #555;">Build crazy stories</div>
+                    </div>
+                </div>
             </div>
+            
+            <div style="text-align: center; background: linear-gradient(135deg, #fff5e6 0%, #ffe8b3 100%); border-radius: 15px; padding: 10px; margin-bottom: 15px; border: 2px solid #ffd93d;">
+                <div style="font-size: 0.9em; color: #555;">
+                    <strong style="color: #ff6b6b;">Then watch</strong> your answers become <strong style="color: #4ecdc4;">REAL prompts</strong> for AI! 🎉
+                </div>
+            </div>
+            
+            <button class="btn" onclick="startGame()" style="font-size: 1.3em; padding: 18px 45px; width: 100%; max-width: 380px; margin: 0 auto; display: block; background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%); box-shadow: 0 6px 0 #cc5555, 0 8px 25px rgba(255, 107, 107, 0.5); animation: btnPulse 2s ease-in-out infinite;">
+                Let's Play! 🎮
+            </button>
+        </div>
+        
+        <style>
+            @keyframes btnPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.03); }
+            }
+        </style>
+
+        <!-- Single Question Display (used for ALL rounds) -->
+        <div id="question-screen" class="hidden card">
+            <div class="progress-container">
+                <div class="progress-label" id="progressLabel"></div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+            </div>
+            
+            <div id="questionContent"></div>
+            
+            <button class="btn" id="nextBtn" onclick="nextQuestion()">NEXT →</button>
         </div>
 
-        <!-- ===== STORY SCREENS ===== -->
-        <div class="screen" id="story1Screen">
-            <h2 class="title" style="font-size:2.5em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">📖 Your Story So Far!</h2>
-            <div class="story-card">
-                <div class="story-title">Read your Mad Libs story:</div>
-                <div class="story-text" id="story1Text"></div>
-            </div>
-            <button class="btn btn-green" onclick="startRound(2)">Nice! Now let's add challenges... ⚡</button>
+        <!-- Story Screens -->
+        <div id="story1-display" class="hidden card">
+            <div class="story-title">Now read your Mad Libs story:</div>
+            <div class="story" id="story1"></div>
+            <button class="btn" onclick="continueToRound2()">Nice! Now let's add challenges... ⚡</button>
         </div>
 
-        <div class="screen" id="story2Screen">
-            <h2 class="title" style="font-size:2.5em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">⚡ Challenges Added!</h2>
-            <div class="story-card">
-                <div class="story-title">See how challenges changed your story:</div>
-                <div class="story-text" id="story2Text"></div>
-            </div>
-            <button class="btn btn-blue" onclick="startRound(3)">Awesome! One more round - let's get CRAZY! 🎪</button>
+        <div id="story2-display" class="hidden card">
+            <div class="story-title">Now read how challenges changed your story:</div>
+            <div class="story" id="story2"></div>
+            <button class="btn" onclick="continueToRound3()">Awesome! One more round - let's get CRAZY! 🎪</button>
         </div>
 
-        <div class="screen" id="story3Screen">
-            <h2 class="title" style="font-size:2.5em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">🎪 CHAOS MODE!</h2>
-            <div class="story-card">
-                <div class="story-title">Read the CRAZY final version:</div>
-                <div class="story-text" id="story3Text"></div>
-            </div>
-            <button class="btn btn-purple" onclick="showPrompts()">Now let's turn these into REAL prompts! 🚀</button>
+        <div id="story3-display" class="hidden card">
+            <div class="story-title">Now read the CRAZY final version:</div>
+            <div class="story" id="story3"></div>
+            <button class="btn" onclick="showPrompts()">Now let's turn these into REAL prompts! 🚀</button>
         </div>
 
-        <!-- ===== FINAL PROMPTS SCREEN ===== -->
-        <div class="screen" id="promptsScreen">
-            <h2 class="title" style="font-size:2.2em;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.2);">🎮 YOUR THREE GAME PROMPTS!</h2>
-            <p class="subtitle">See How Each Round Created a Different Game!</p>
-
-            <div class="prompts-container">
+        <!-- Final Prompts -->
+        <div id="final-prompts" class="hidden card" style="position: relative;">
+            <h1 style="font-size: 2.5em;">YOUR GAME PROMPTS!</h1>
+            <div class="subtitle">See How Each Round Created a Different Game!</div>
+            
+            <div style="text-align: center; background: linear-gradient(135deg, #e8f5ff 0%, #d4edff 100%); border: 2px solid #4ecdc4; border-radius: 12px; padding: 10px; margin-bottom: 20px; font-size: 0.9em; color: #555;">
+                📜 <strong>Scroll down</strong> to see all three prompts!
+            </div>
+            
+            <div class="prompts-grid">
                 <div class="prompt-card">
-                    <div class="prompt-header p1">📗 PROMPT 1: The Basic Game</div>
-                    <div class="prompt-text" id="prompt1Text"></div>
-                    <button class="btn btn-small btn-green" onclick="copyPrompt(1)">Copy Prompt 1 📋</button>
-                    <div class="copy-success" id="copy1"></div>
+                    <div class="prompt-title">Prompt 1: The Basic Game</div>
+                    <div class="prompt-text" id="prompt1"></div>
+                    <button class="btn" onclick="copyPrompt(1)" style="font-size: 1.1em; padding: 12px 30px;">Copy 📋</button>
                 </div>
-
+                
                 <div class="prompt-card">
-                    <div class="prompt-header p2">📘 PROMPT 2: With Challenges</div>
-                    <div class="prompt-text" id="prompt2Text"></div>
-                    <button class="btn btn-small btn-blue" onclick="copyPrompt(2)">Copy Prompt 2 📋</button>
-                    <div class="copy-success" id="copy2"></div>
+                    <div class="prompt-title">Prompt 2: With Challenges</div>
+                    <div class="prompt-text" id="prompt2"></div>
+                    <button class="btn" onclick="copyPrompt(2)" style="font-size: 1.1em; padding: 12px 30px;">Copy 📋</button>
                 </div>
-
+                
                 <div class="prompt-card">
-                    <div class="prompt-header p3">📕 PROMPT 3: Full Chaos Mode</div>
-                    <div class="prompt-text" id="prompt3Text"></div>
-                    <button class="btn btn-small" onclick="copyPrompt(3)">Copy Prompt 3 📋</button>
-                    <div class="copy-success" id="copy3"></div>
+                    <div class="prompt-title">Prompt 3: Full Chaos Mode</div>
+                    <div class="prompt-text" id="prompt3"></div>
+                    <button class="btn" onclick="copyPrompt(3)" style="font-size: 1.1em; padding: 12px 30px;">Copy 📋</button>
                 </div>
             </div>
 
-            <div class="final-message">
-                <strong>See the difference?</strong> Each round made the game more detailed and interesting!<br>
-                Pick your favorite prompt and paste it into Lovable.ai to build your game!
+            <div class="explanation">
+                See the difference? Each round made the game more detailed and interesting!<br>
+                <strong>Pick your favorite prompt and paste it into Lovable.ai to build your game!</strong>
             </div>
 
-            <button class="btn btn-purple" onclick="window.open('https://lovable.dev', '_blank')">Open Lovable.dev 🚀</button>
-            <button class="btn btn-green" onclick="downloadPrompts()">Download All 3 📥</button>
-            <button class="btn btn-blue" onclick="resetGame()">Start Over 🔄</button>
+            <div class="button-row">
+                <button class="btn" onclick="window.open('https://docs.google.com/document/d/11oNqYdofy98P0z8Lnr9BMh7rIh9TB2TPwS99pdOOTyc/edit?tab=t.0', '_blank')" style="font-size: 1.1em;">Open Google Doc 📝</button>
+                <button class="btn" onclick="window.open('https://lovable.ai', '_blank')" style="font-size: 1.1em;">Open Lovable.ai 🚀</button>
+                <button class="btn" onclick="downloadPrompts()" style="font-size: 1.1em;">Download All 📥</button>
+                <button class="btn" onclick="location.reload()" style="font-size: 1.1em;">Start Over 🔄</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // ===== GAME DATA =====
-        const round1Questions = [
-            { id: 'place', label: 'A funny place for your adventure', hint: 'This sets the theme!', suggestions: ['space station', 'underwater castle', 'pizza planet', 'haunted library', 'candy factory'] },
-            { id: 'adjective1', label: 'A silly adjective', hint: 'Describe something funny!', suggestions: ['sparkly', 'wiggly', 'cosmic', 'bubbly', 'giggly'] },
-            { id: 'mathTopic', label: 'A math topic you\'re working on', hint: 'Be honest!', suggestions: ['fractions', 'long division', 'decimals', 'word problems'] },
-            { id: 'object', label: 'A weird object', hint: 'The stranger the better!', suggestions: ['rubber duck', 'disco ball', 'giant sock', 'magic pencil'] },
-            { id: 'feeling', label: 'How you feel about math this week', hint: 'Any feeling!', suggestions: ['curious', 'determined', 'excited', 'puzzled'] },
-            { id: 'animal', label: 'A type of animal', hint: 'Real or imaginary!', suggestions: ['penguin', 'dragon', 'unicorn', 'robot dog'] },
-            { id: 'mathLove', label: 'A math topic you secretly love', hint: 'Or don\'t mind!', suggestions: ['patterns', 'geometry', 'puzzles', 'multiplication'] },
-            { id: 'bigNumber', label: 'A HUGE number', hint: 'Go big!', suggestions: ['9,999', 'one million', 'a billion', 'infinity'] },
-            { id: 'reward', label: 'A reward that motivates you', hint: 'What makes you try harder?', suggestions: ['pizza party', 'extra recess', 'video games', 'ice cream'] },
-            { id: 'adjective2', label: 'Another silly adjective', hint: 'Different from before!', suggestions: ['fuzzy', 'bouncy', 'glittery', 'squishy'] },
-            { id: 'sound', label: 'A sound effect', hint: 'Make noise!', suggestions: ['BEEP BOOP!', 'WHOOSH!', 'KA-CHING!', 'SPLAT!'] },
-            { id: 'encourage', label: 'What you\'d say to encourage a friend', hint: 'Be supportive!', suggestions: ['You got this!', 'Keep trying!', 'Almost there!'] },
-            { id: 'charName', label: 'Your character\'s name', hint: 'Make it fun!', suggestions: ['Professor Penguin', 'Captain Calculator', 'Math Ninja'] },
-            { id: 'verb', label: 'A verb ending in -ing', hint: 'An action!', suggestions: ['dancing', 'zooming', 'bouncing', 'spinning'] }
-        ];
+        // Game state
+        const answers = {};
+        let currentTheme = '';
+        let currentQuestionIndex = 0;
+        let currentRound = 0;
+        let currentPage = 1;
 
-        const wheelOptions = {
-            challenge: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
-            failure: ['Start Over', 'Lose Points', 'Silly Animation', 'Try Again', 'Mini Penalty', 'Funny Sound'],
-            winCondition: ['Collect 100 Items', 'Make Teacher Laugh', 'Solve the Riddle', 'Find the Key', 'Beat High Score', 'Help a Friend']
+        // Theme data
+        const themes = {
+            space: {
+                particles: ['⭐', '🚀', '🌟', '✨', '🌙', '🛸', '👽', '🌠'],
+                adjectives: ['cosmic', 'stellar', 'galactic', 'alien'],
+                objects: ['moon rock', 'asteroid', 'space helmet', 'alien slime'],
+                animals: ['space dog', 'alien cat', 'robot penguin', 'cosmic llama'],
+                sounds: ['ZOOM!', 'BEEP BOOP!', 'ZAP!', 'WHOOSH!'],
+                powerups: ['Rocket Boost', 'Star Shield', 'Cosmic Hint', 'Galaxy Power'],
+                challenges: ['Asteroid dodging', 'Rocket fuel running out', 'Alien code breaking', 'Zero gravity math'],
+                challengeTypes: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
+                fails: ['Float away in space', 'Meteor hits you', 'Teleport back', 'Lost in asteroid field'],
+                bonuses: ['Galaxy Map', 'Alien Translator', 'Planet Collector', 'Star Chart'],
+                rules: ['Zero Gravity Mode', 'Talking Backwards in Space', 'Everything Spins', 'Time Travel Math'],
+                plotTwists: ['Aliens are friendly', 'You\'re on the wrong planet', 'Time travel happens', 'Secret space base found'],
+                wins: ['Collect 100 Stars', 'Reach Planet X', 'Befriend All Aliens', 'Save the Galaxy'],
+                chaos: ['Rainbow star explosions', 'Planets dance', 'Gravity flips', 'Stars sing'],
+                ultimates: ['Teleport Anywhere', 'Dance Party', 'Star Power', 'Galaxy Creator']
+            },
+            ocean: {
+                particles: ['🐠', '🐟', '🫧', '🐙', '🦈', '🐚', '🌊', '🐬'],
+                adjectives: ['bubbly', 'soggy', 'fishy', 'splashy'],
+                objects: ['treasure chest', 'giant pearl', 'sea shell', 'anchor'],
+                animals: ['dolphin', 'octopus', 'seahorse', 'shark'],
+                sounds: ['SPLASH!', 'BUBBLE!', 'GLUG GLUG!', 'WHOOSH!'],
+                powerups: ['Pearl Power', 'Bubble Shield', 'Dolphin Helper', 'Wave Rider'],
+                challenges: ['Underwater currents', 'Treasure hunt', 'Sea creature quiz', 'Coral maze'],
+                challengeTypes: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
+                fails: ['Swept by current', 'Trapped in bubble', 'Swim back to start', 'Lost in kelp forest'],
+                bonuses: ['Treasure Map', 'Shell Collection', 'Fish Encyclopedia', 'Diving Helmet'],
+                rules: ['Swimming Backwards', 'Bubble Speech', 'Upside Down Underwater', 'Fish Language Only'],
+                plotTwists: ['Atlantis appears', 'You can breathe underwater', 'Mermaids help you', 'Secret underwater city'],
+                wins: ['Find Atlantis', 'Collect 100 Pearls', 'Become Mermaid Ruler', 'Save the Ocean'],
+                chaos: ['Rainbow bubbles', 'Fish parade', 'Waves dance', 'Coral glows'],
+                ultimates: ['Dance Party', 'Wave Control', 'Super Speed', 'Ocean Powers']
+            },
+            candy: {
+                particles: ['🍭', '🍬', '🍫', '🍩', '🧁', '🍰', '🎂', '🍪'],
+                adjectives: ['sweet', 'sugary', 'gummy', 'sparkly'],
+                objects: ['giant lollipop', 'chocolate fountain', 'gumball', 'candy cane'],
+                animals: ['gummy bear', 'chocolate bunny', 'sugar mouse', 'candy bird'],
+                sounds: ['MUNCH!', 'CRUNCH!', 'NOM NOM!', 'POP!'],
+                powerups: ['Sugar Rush', 'Sweet Shield', 'Candy Guide', 'Rainbow Power'],
+                challenges: ['Melting timer', 'Recipe mixing', 'Sugar rush speed round', 'Candy sorting'],
+                challengeTypes: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
+                fails: ['Get sticky', 'Sugar crash', 'Melt a little', 'Stuck in taffy'],
+                bonuses: ['Recipe Book', 'Flavor Mixer', 'Sweet Shop', 'Golden Wrapper'],
+                rules: ['Everything Melts', 'Sweet Swap', 'Rainbow Mode', 'Sugar Speed'],
+                plotTwists: ['Everything comes alive', 'You shrink', 'Candy talks to you', 'Secret recipe found'],
+                wins: ['Make Perfect Recipe', 'Collect Rainbow Candies', 'Open Sweet Shop', 'Become Candy Master'],
+                chaos: ['Rainbow explosions', 'Candy rain', 'Everything sparkles', 'Frosting everywhere'],
+                ultimates: ['Create Anything', 'Dance Party', 'Sugar Powers', 'Candy Kingdom']
+            },
+            haunted: {
+                particles: ['👻', '🦇', '🕷️', '🎃', '✨', '🕸️', '🌙', '🔮'],
+                adjectives: ['spooky', 'ghostly', 'mysterious', 'magical'],
+                objects: ['magic wand', 'crystal ball', 'cauldron', 'spell book'],
+                animals: ['black cat', 'owl', 'bat', 'friendly ghost'],
+                sounds: ['BOO!', 'CREAK!', 'WHOOO!', 'RATTLE!'],
+                powerups: ['Magic Spell', 'Ghost Helper', 'Crystal Ball Hint', 'Potion Power'],
+                challenges: ['Ghost chase', 'Spell casting', 'Mystery solving', 'Potion brewing'],
+                challengeTypes: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
+                fails: ['Get spooked', 'Turn invisible', 'Teleport to start', 'Lost in fog'],
+                bonuses: ['Spell Book', 'Ghost Friends', 'Mystery Solver', 'Magic Wand'],
+                rules: ['Invisible Mode', 'Ghost Speech', 'Backwards Time', 'Magic Only'],
+                plotTwists: ['Ghosts are nice', 'You have magic powers', 'It\'s all a dream', 'Secret spell discovered'],
+                wins: ['Solve the Mystery', 'Make Ghosts Happy', 'Find Magic Key', 'Become Master Wizard'],
+                chaos: ['Rainbow ghosts', 'Magic sparkles', 'Spooky dance party', 'Portal opens'],
+                ultimates: ['Dance Party', 'Spell Master', 'Time Travel', 'Ultimate Wizard']
+            },
+            jungle: {
+                particles: ['🐒', '🦜', '🌿', '🦁', '🌺', '🍌', '🐍', '🦋'],
+                adjectives: ['wild', 'leafy', 'tropical', 'vine-covered'],
+                objects: ['coconut', 'banana bunch', 'vine rope', 'jungle drum'],
+                animals: ['monkey', 'parrot', 'toucan', 'sloth'],
+                sounds: ['ROAR!', 'TWEET TWEET!', 'RUSTLE!', 'SWING!'],
+                powerups: ['Monkey Guide', 'Vine Swing', 'Animal Friend', 'Jungle Speed'],
+                challenges: ['Vine swinging', 'Animal tracking', 'Treasure hunting', 'Jungle maze'],
+                challengeTypes: ['Time Pressure', 'Tricky Puzzles', 'Memory Game', 'Speed Round', 'Mystery Challenge', 'Boss Battle'],
+                fails: ['Tangled in vines', 'Slide down tree', 'Monkey laughs at you', 'Lost in jungle'],
+                bonuses: ['Animal Guide', 'Plant Encyclopedia', 'Exploration Map', 'Machete'],
+                rules: ['Animal Sounds Only', 'Swinging Everywhere', 'Monkey Mode', 'Vine Math'],
+                plotTwists: ['Animals talk', 'You become an animal', 'Secret temple found', 'Hidden treasure revealed'],
+                wins: ['Find Lost Temple', 'Befriend All Animals', 'Discover Treasure', 'Become Jungle King'],
+                chaos: ['Rainbow animals', 'Vines dance', 'Flower explosions', 'Jungle party'],
+                ultimates: ['Dance Party', 'Plant Control', 'Super Swing', 'Jungle Powers']
+            }
         };
 
-        const generatorOptions = {
-            powerup: ['Hint Coin', 'Time Freeze', 'Skip Button', 'Double Points', 'Shield', 'Extra Life'],
-            bonus: ['Secret Level', 'Multiplayer Mode', 'Leaderboard', 'Achievements', 'Custom Skins', 'Sound Effects'],
-            chaos: ['Rainbow explosions', 'Characters swap costumes', 'Upside-down mode', 'Everything glows', 'Confetti everywhere', 'Slow motion'],
-            megaBonus: ['Dance mode', 'Confetti everywhere', 'Secret codes', 'Time travel', 'Magic portal', 'Disco lights']
-        };
-
-        const slotReels = [
-            ['Everything is', 'Players must', 'The world is', 'Numbers are'],
-            ['backwards', 'upside-down', 'in slow-mo', 'super fast'],
-            ['now!', 'mode!', 'activated!', 'engaged!']
+        // All questions for all 3 rounds
+        const allQuestions = [
+            // Round 1 (14 questions)
+            { round: 1, id: 'place', type: 'text', label: '1. A funny place for your adventure', subtext: 'Where does your game take place?', needIdeas: true },
+            { round: 1, id: 'adjective1', type: 'text', label: '2. A silly adjective', subtext: 'Pick a word that describes something in a funny way!', needIdeas: true },
+            { round: 1, id: 'mathTopic1', type: 'text', label: '3. A math topic you\'re working on', subtext: 'What are you learning in math class right now?', needIdeas: true },
+            { round: 1, id: 'object1', type: 'text', label: '4. A weird object', subtext: 'Think of something unusual or unexpected!', needIdeas: true },
+            { round: 1, id: 'feeling', type: 'text', label: '5. How you feel about math this week', subtext: 'What emotion describes your math mood?', needIdeas: true },
+            { round: 1, id: 'animal', type: 'text', label: '6. A type of animal', subtext: 'Real or imaginary - your choice!', needIdeas: true },
+            { round: 1, id: 'mathTopic2', type: 'text', label: '7. A math topic you secretly love', subtext: 'There\'s gotta be one you actually enjoy!', needIdeas: true },
+            { round: 1, id: 'number', type: 'text', label: '8. A HUGE number', subtext: 'Go big! The bigger, the funnier!', needIdeas: true },
+            { round: 1, id: 'reward', type: 'text', label: '9. A reward that motivates you', subtext: 'What prize would make you work really hard?', needIdeas: true },
+            { round: 1, id: 'adjective2', type: 'text', label: '10. Another silly adjective', subtext: 'Different from #2 - make it wild!', needIdeas: true },
+            { round: 1, id: 'sound', type: 'text', label: '11. A sound effect', subtext: 'Make it loud and exciting!', needIdeas: true },
+            { round: 1, id: 'encouragement', type: 'text', label: '12. What you\'d say to encourage a stuck friend', subtext: 'Give them some motivating words!', needIdeas: true },
+            { round: 1, id: 'character', type: 'text', label: '13. Your character\'s name', subtext: 'Give your hero an awesome name!', needIdeas: true },
+            { round: 1, id: 'verb', type: 'text', label: '14. A verb ending in -ing', subtext: 'An action word like running or jumping!', needIdeas: true },
+            
+            // Round 2 (6 questions)
+            { round: 2, id: 'challengeType', type: 'wheel', label: '1. Spin the wheel for your challenge type!', subtext: '', category: 'challengeTypes' },
+            { round: 2, id: 'challengeWhat', type: 'text', label: '2. What specifically happens in this challenge?', subtext: 'Describe the obstacle or puzzle players face', needIdeas: true, category: 'challenges' },
+            { round: 2, id: 'powerup', type: 'generator', label: '3. Generate your power-up!', subtext: '', category: 'powerups' },
+            { round: 2, id: 'powerupHow', type: 'text', label: '4. How does this power-up help you?', subtext: 'What advantage does it give players?', needIdeas: true },
+            { round: 2, id: 'fail', type: 'wheel', label: '5. Spin for what happens when you fail!', subtext: '', category: 'fails' },
+            { round: 2, id: 'bonus', type: 'generator', label: '6. Get a surprise bonus feature!', subtext: '', category: 'bonuses' },
+            
+            // Round 3 (6 questions)
+            { round: 3, id: 'rule', type: 'generator', label: '1. Get a wild random rule!', subtext: '', category: 'rules' },
+            { round: 3, id: 'plotTwist', type: 'text', label: '2. Describe your plot twist!', subtext: 'What unexpected thing happens?', needIdeas: true, category: 'plotTwists' },
+            { round: 3, id: 'win', type: 'wheel', label: '3. Spin for the win condition!', subtext: '', category: 'wins' },
+            { round: 3, id: 'chaosEvent', type: 'generator', label: '4. Add random chaos!', subtext: '', category: 'chaos' },
+            { round: 3, id: 'wildElement', type: 'text', label: '5. One last wild element!', subtext: 'Add something totally unexpected!', needIdeas: true },
+            { round: 3, id: 'megaBonus', type: 'generator', label: '6. ULTIMATE MEGA BONUS!', subtext: '', category: 'ultimates' }
         ];
 
-        let currentRound = 1;
-        let currentQuestion = 0;
-        let answers = {};
-        let round2Data = {};
-        let round3Data = {};
-
-        // ===== NAVIGATION =====
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function updatePageIndicator() {
+            document.getElementById('pageIndicator').textContent = `${currentPage}/28`;
         }
 
         function startGame() {
+            document.getElementById('homepage').classList.add('hidden');
+            document.getElementById('question-screen').classList.remove('hidden');
             currentRound = 1;
-            currentQuestion = 0;
-            answers = {};
-            round2Data = {};
-            round3Data = {};
-            showScreen('questionScreen');
-            renderQuestion();
+            currentQuestionIndex = 0;
+            currentPage = 2;
+            updatePageIndicator();
+            showQuestion();
         }
 
-        function startRound(round) {
-            currentRound = round;
-            currentQuestion = 0;
-            showScreen('questionScreen');
-            renderQuestion();
-        }
-
-        function resetGame() {
-            showScreen('startScreen');
-        }
-
-        // ===== ROUND 1: TEXT INPUTS =====
-        function renderQuestion() {
-            const card = document.getElementById('questionCard');
-            const badge = document.getElementById('roundBadge');
-            const content = document.getElementById('questionContent');
-            const nextBtn = document.getElementById('nextBtn');
-
-            badge.className = 'round-badge r' + currentRound;
-            badge.textContent = 'ROUND ' + currentRound;
-            card.className = 'question-card r' + currentRound;
-
-            if (currentRound === 1) {
-                renderRound1Question(content);
-            } else if (currentRound === 2) {
-                renderRound2Question(content);
-            } else {
-                renderRound3Question(content);
+        function showQuestion() {
+            const question = allQuestions[currentQuestionIndex];
+            const container = document.getElementById('questionContent');
+            
+            // Update progress
+            const roundQuestions = allQuestions.filter(q => q.round === currentRound);
+            const roundIndex = allQuestions.slice(0, currentQuestionIndex).filter(q => q.round === currentRound).length;
+            const progress = ((roundIndex + 1) / roundQuestions.length) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressLabel').textContent = 
+                `ROUND ${currentRound}: ${currentRound === 1 ? 'THE BASIC ADVENTURE' : currentRound === 2 ? 'CHALLENGES & POWER-UPS' : 'ABSOLUTE MADNESS!'}`;
+            
+            let html = '<div class="question-section">';
+            html += `<div class="question-title">${question.label}</div>`;
+            if (question.subtext) {
+                html += `<div class="question-subtext">${question.subtext}</div>`;
             }
-
-            card.style.animation = 'none';
-            card.offsetHeight;
-            card.style.animation = 'popIn 0.35s ease';
-        }
-
-        function renderRound1Question(content) {
-            const q = round1Questions[currentQuestion];
-            const progress = ((currentQuestion) / round1Questions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-
-            content.innerHTML = `
-                <div class="question-label">${currentQuestion + 1}. ${q.label}</div>
-                <div class="question-hint">${q.hint}</div>
-                <input type="text" class="text-input" id="textInput" placeholder="type here..." autocomplete="off">
-                <div>
-                    <button class="ideas-btn" id="ideasBtn" onclick="showIdeas()">Need ideas? 💡</button>
-                    <div class="suggestions" id="suggestions">
-                        ${q.suggestions.map(s => `<span class="suggestion" onclick="useSuggestion('${s}')">${s}</span>`).join('')}
+            
+            if (question.type === 'text') {
+                html += `
+                    <div class="input-container">
+                        <input type="text" id="${question.id}" placeholder="type here...">
                     </div>
-                </div>
-            `;
-
-            const input = document.getElementById('textInput');
-            const nextBtn = document.getElementById('nextBtn');
-            nextBtn.disabled = true;
-            nextBtn.textContent = currentQuestion === round1Questions.length - 1 ? 'SEE YOUR STORY! 📖' : 'NEXT →';
-
-            input.addEventListener('input', () => { nextBtn.disabled = !input.value.trim(); });
-            input.addEventListener('keypress', (e) => { if (e.key === 'Enter' && input.value.trim()) nextQuestion(); });
-            input.focus();
-        }
-
-        function showIdeas() {
-            document.getElementById('ideasBtn').style.display = 'none';
-            document.getElementById('suggestions').classList.add('visible');
-        }
-
-        function useSuggestion(text) {
-            document.getElementById('textInput').value = text;
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        // ===== ROUND 2: MIXED INPUTS =====
-        const round2Steps = [
-            { type: 'wheel', id: 'challenge', label: 'Spin for your challenge type!', options: 'challenge' },
-            { type: 'text', id: 'challengeDesc', label: 'What specifically happens in this challenge?', hint: 'Describe how it works!' },
-            { type: 'generator', id: 'powerup', label: 'Generate your power-up!', options: 'powerup' },
-            { type: 'text', id: 'powerupDesc', label: 'How does this power-up help you?', hint: 'What does it do?' },
-            { type: 'wheel', id: 'failure', label: 'Spin for what happens when you fail!', options: 'failure' },
-            { type: 'generator', id: 'bonus', label: 'Get a surprise bonus feature!', options: 'bonus' }
-        ];
-
-        function renderRound2Question(content) {
-            const step = round2Steps[currentQuestion];
-            const progress = ((currentQuestion) / round2Steps.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('nextBtn').textContent = currentQuestion === round2Steps.length - 1 ? 'SEE YOUR STORY! 📖' : 'NEXT →';
-            document.getElementById('nextBtn').disabled = true;
-
-            if (step.type === 'wheel') {
-                renderWheel(content, step);
-            } else if (step.type === 'generator') {
-                renderGenerator(content, step);
-            } else {
-                renderTextInput(content, step);
-            }
-        }
-
-        function renderWheel(content, step) {
-            const options = wheelOptions[step.options];
-            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4ecdc4', '#54a0ff', '#ff9ff3'];
-
-            content.innerHTML = `
-                <div class="question-label">${step.label}</div>
-                <div class="wheel-container">
-                    <div class="wheel-pointer"></div>
-                    <div class="wheel" id="wheel">
-                        ${options.map((opt, i) => {
-                            const angle = (i * 60) - 60;
-                            return `<div class="wheel-segment" style="transform: rotate(${angle}deg) skewY(-30deg); background: ${colors[i]};">
-                                <span style="transform: skewY(30deg) rotate(30deg);">${opt}</span>
-                            </div>`;
-                        }).join('')}
+                    <button class="ideas-btn" onclick="toggleSuggestions('${question.id}', '${question.category || question.id}')">Need ideas? 💡</button>
+                    <div class="suggestions" id="suggestions-${question.id}"></div>
+                `;
+            } else if (question.type === 'wheel') {
+                html += `
+                    <div class="wheel-container">
+                        <div class="wheel ${currentTheme}" id="wheel-${question.id}"></div>
+                        <button class="btn spin-btn" onclick="spinWheel('${question.id}', '${question.category}')">SPIN THE WHEEL!</button>
+                        <div class="wheel-result" id="result-${question.id}"></div>
                     </div>
-                    <div class="wheel-center"></div>
-                </div>
-                <button class="btn btn-small btn-purple" onclick="spinWheel('${step.id}', '${step.options}')">SPIN! 🎡</button>
-                <div class="wheel-result" id="wheelResult"></div>
-            `;
-        }
-
-        function spinWheel(id, optionsKey) {
-            const wheel = document.getElementById('wheel');
-            const options = wheelOptions[optionsKey];
-            const randomIndex = Math.floor(Math.random() * options.length);
-            const rotation = 1440 + (randomIndex * 60) + 30; // Multiple spins + land on segment
-
-            wheel.style.transform = `rotate(${rotation}deg)`;
-
-            setTimeout(() => {
-                const result = options[randomIndex];
-                document.getElementById('wheelResult').textContent = '🎉 ' + result + '!';
-                round2Data[id] = result;
-                document.getElementById('nextBtn').disabled = false;
-            }, 3000);
-        }
-
-        function renderGenerator(content, step) {
-            content.innerHTML = `
-                <div class="question-label">${step.label}</div>
-                <div class="generator-box">
-                    <button class="btn btn-small" onclick="generate('${step.id}', '${step.options}')">
-                        ${step.options === 'powerup' ? 'Generate Power-up! ⚡' : 'Surprise Me! 🎁'}
+                `;
+            } else if (question.type === 'generator') {
+                html += `
+                    <button class="btn" style="background: linear-gradient(135deg, #f7b731 0%, #f39c12 100%); box-shadow: 0 8px 0 #c87f0a, 0 10px 30px rgba(247, 183, 49, 0.5);" 
+                        onclick="generateRandom('${question.id}', '${question.category}')">
+                        ${question.label.includes('power-up') ? 'Generate My Power-up! ⚡' : 
+                          question.label.includes('rule') ? 'Generate Wild Rule! 🎲' :
+                          question.label.includes('chaos') ? 'Add Random Chaos! 🎪' :
+                          question.label.includes('ULTIMATE') ? 'ULTIMATE BONUS! 🌟' : 'Generate! 🎲'}
                     </button>
-                    <div class="generator-result" id="genResult">???</div>
-                </div>
-            `;
-        }
-
-        function generate(id, optionsKey) {
-            const options = generatorOptions[optionsKey];
-            const result = document.getElementById('genResult');
-            result.classList.add('spinning');
-
-            let count = 0;
-            const interval = setInterval(() => {
-                result.textContent = options[Math.floor(Math.random() * options.length)];
-                count++;
-                if (count > 15) {
-                    clearInterval(interval);
-                    result.classList.remove('spinning');
-                    const final = options[Math.floor(Math.random() * options.length)];
-                    result.textContent = '🎉 ' + final;
-                    if (currentRound === 2) round2Data[id] = final;
-                    else round3Data[id] = final;
-                    document.getElementById('nextBtn').disabled = false;
-                }
-            }, 100);
-        }
-
-        function renderTextInput(content, step) {
-            content.innerHTML = `
-                <div class="question-label">${step.label}</div>
-                <div class="question-hint">${step.hint || ''}</div>
-                <input type="text" class="text-input" id="textInput" placeholder="type here..." autocomplete="off">
-            `;
-
-            const input = document.getElementById('textInput');
-            input.addEventListener('input', () => { document.getElementById('nextBtn').disabled = !input.value.trim(); });
-            input.addEventListener('keypress', (e) => { if (e.key === 'Enter' && input.value.trim()) nextQuestion(); });
-            input.focus();
-        }
-
-        // ===== ROUND 3: CHAOS MODE =====
-        const round3Steps = [
-            { type: 'slot', id: 'rule', label: 'Spin the slot machine for a random rule!' },
-            { type: 'text', id: 'twist', label: 'Describe an unexpected plot twist!', hint: 'Surprise everyone!' },
-            { type: 'wheel', id: 'winCondition', label: 'Spin for how players win!', options: 'winCondition' },
-            { type: 'generator', id: 'chaos', label: 'Add random chaos!', options: 'chaos' },
-            { type: 'text', id: 'wildElement', label: 'One last wild element!', hint: 'Anything goes!' },
-            { type: 'megaGenerator', id: 'megaBonus', label: 'ULTIMATE RANDOM BONUS!' }
-        ];
-
-        function renderRound3Question(content) {
-            const step = round3Steps[currentQuestion];
-            const progress = ((currentQuestion) / round3Steps.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('nextBtn').textContent = currentQuestion === round3Steps.length - 1 ? 'SEE YOUR STORY! 📖' : 'NEXT →';
-            document.getElementById('nextBtn').disabled = true;
-
-            if (step.type === 'slot') {
-                renderSlotMachine(content, step);
-            } else if (step.type === 'wheel') {
-                renderWheel3(content, step);
-            } else if (step.type === 'generator' || step.type === 'megaGenerator') {
-                renderGenerator3(content, step);
+                    <div class="generator-result" id="result-${question.id}"></div>
+                    <button class="ideas-btn" onclick="toggleSuggestions('${question.id}', '${question.category}')" style="margin-top: 15px;">Need more ideas? 💡</button>
+                    <div class="suggestions" id="suggestions-${question.id}"></div>
+                `;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+            
+            // Focus input if text
+            if (question.type === 'text') {
+                setTimeout(() => {
+                    const input = document.getElementById(question.id);
+                    input?.focus();
+                    // Add event listener to show Next button when user types
+                    input?.addEventListener('input', function() {
+                        const nextBtn = document.getElementById('nextBtn');
+                        if (this.value.trim()) {
+                            nextBtn.style.display = 'block';
+                        }
+                    });
+                }, 100);
+            }
+            
+            // Update button
+            const nextBtn = document.getElementById('nextBtn');
+            const isLastInRound = currentQuestionIndex === allQuestions.filter(q => q.round === currentRound).length - 1 + 
+                (currentRound - 1) * (currentRound === 1 ? 14 : 6);
+            
+            if (isLastInRound) {
+                nextBtn.textContent = 'SEE MY STORY! 📖';
             } else {
-                renderTextInput(content, step);
+                nextBtn.textContent = 'NEXT →';
+            }
+            
+            // Hide Next button for wheel/generator questions until action is completed
+            if (question.type === 'wheel' || question.type === 'generator') {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'block';
             }
         }
 
-        function renderSlotMachine(content, step) {
-            content.innerHTML = `
-                <div class="question-label">${step.label}</div>
-                <div class="slot-machine">
-                    <div class="slot-reels">
-                        <div class="slot-reel" id="reel1">???</div>
-                        <div class="slot-reel" id="reel2">???</div>
-                        <div class="slot-reel" id="reel3">???</div>
-                    </div>
-                    <button class="btn btn-small" style="margin-top:15px;" onclick="spinSlots()">PULL LEVER! 🎰</button>
-                </div>
-                <div class="slot-result" id="slotResult"></div>
-            `;
-        }
-
-        function spinSlots() {
-            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
-            reels.forEach(r => r.classList.add('spinning'));
-
-            const results = slotReels.map(reel => reel[Math.floor(Math.random() * reel.length)]);
-
-            setTimeout(() => {
-                reels[0].classList.remove('spinning');
-                reels[0].textContent = results[0];
-            }, 1000);
-
-            setTimeout(() => {
-                reels[1].classList.remove('spinning');
-                reels[1].textContent = results[1];
-            }, 1500);
-
-            setTimeout(() => {
-                reels[2].classList.remove('spinning');
-                reels[2].textContent = results[2];
-                const fullResult = results.join(' ');
-                document.getElementById('slotResult').textContent = '🎉 ' + fullResult;
-                round3Data.rule = fullResult;
-                document.getElementById('nextBtn').disabled = false;
-            }, 2000);
-        }
-
-        function renderWheel3(content, step) {
-            const options = wheelOptions[step.options];
-            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4ecdc4', '#54a0ff', '#ff9ff3'];
-
-            content.innerHTML = `
-                <div class="question-label">${step.label}</div>
-                <div class="wheel-container">
-                    <div class="wheel-pointer"></div>
-                    <div class="wheel" id="wheel">
-                        ${options.map((opt, i) => {
-                            const angle = (i * 60) - 60;
-                            return `<div class="wheel-segment" style="transform: rotate(${angle}deg) skewY(-30deg); background: ${colors[i]};">
-                                <span style="transform: skewY(30deg) rotate(30deg);">${opt}</span>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                    <div class="wheel-center"></div>
-                </div>
-                <button class="btn btn-small btn-purple" onclick="spinWheel3('${step.id}', '${step.options}')">SPIN! 🎡</button>
-                <div class="wheel-result" id="wheelResult"></div>
-            `;
-        }
-
-        function spinWheel3(id, optionsKey) {
-            const wheel = document.getElementById('wheel');
-            const options = wheelOptions[optionsKey];
-            const randomIndex = Math.floor(Math.random() * options.length);
-            const rotation = 1440 + (randomIndex * 60) + 30;
-
-            wheel.style.transform = `rotate(${rotation}deg)`;
-
-            setTimeout(() => {
-                const result = options[randomIndex];
-                document.getElementById('wheelResult').textContent = '🎉 ' + result + '!';
-                round3Data[id] = result;
-                document.getElementById('nextBtn').disabled = false;
-            }, 3000);
-        }
-
-        function renderGenerator3(content, step) {
-            const isMega = step.type === 'megaGenerator';
-            content.innerHTML = `
-                <div class="question-label">${step.label}</div>
-                <div class="generator-box" style="${isMega ? 'background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4ecdc4);' : ''}">
-                    <button class="btn btn-small" onclick="generate3('${step.id}', '${step.options || 'megaBonus'}')">
-                        ${isMega ? 'ULTIMATE RANDOM! 🌟' : 'Add Chaos! 🎲'}
-                    </button>
-                    <div class="generator-result" id="genResult">???</div>
-                </div>
-            `;
-        }
-
-        function generate3(id, optionsKey) {
-            const options = generatorOptions[optionsKey];
-            const result = document.getElementById('genResult');
-            result.classList.add('spinning');
-
-            let count = 0;
-            const interval = setInterval(() => {
-                result.textContent = options[Math.floor(Math.random() * options.length)];
-                count++;
-                if (count > 15) {
-                    clearInterval(interval);
-                    result.classList.remove('spinning');
-                    const final = options[Math.floor(Math.random() * options.length)];
-                    result.textContent = '🎉 ' + final;
-                    round3Data[id] = final;
-                    document.getElementById('nextBtn').disabled = false;
-                }
-            }, 100);
-        }
-
-        // ===== NEXT QUESTION =====
         function nextQuestion() {
-            // Save text input if exists
-            const textInput = document.getElementById('textInput');
-            if (textInput && textInput.value.trim()) {
-                if (currentRound === 1) {
-                    answers[round1Questions[currentQuestion].id] = textInput.value.trim();
-                } else if (currentRound === 2) {
-                    round2Data[round2Steps[currentQuestion].id] = textInput.value.trim();
-                } else {
-                    round3Data[round3Steps[currentQuestion].id] = textInput.value.trim();
+            const question = allQuestions[currentQuestionIndex];
+            
+            // Validate
+            if (question.type === 'text') {
+                const input = document.getElementById(question.id);
+                if (!input.value.trim()) {
+                    alert('Please answer before moving on! 😊');
+                    return;
+                }
+                answers[question.id] = input.value.trim();
+                
+                // Apply theme after first question
+                if (question.id === 'place') {
+                    applyTheme(input.value);
+                }
+            } else if (question.type === 'wheel' || question.type === 'generator') {
+                if (!answers[question.id]) {
+                    alert(`Please ${question.type === 'wheel' ? 'spin the wheel' : 'generate'} first! 😊`);
+                    return;
                 }
             }
-
-            currentQuestion++;
-
-            const maxQuestions = currentRound === 1 ? round1Questions.length : (currentRound === 2 ? round2Steps.length : round3Steps.length);
-
-            if (currentQuestion >= maxQuestions) {
+            
+            currentQuestionIndex++;
+            currentPage++;
+            updatePageIndicator();
+            
+            // Check if end of round
+            const roundEnd = allQuestions.findIndex((q, i) => i > currentQuestionIndex - 1 && q.round !== currentRound);
+            
+            if (currentQuestionIndex >= allQuestions.length || roundEnd === currentQuestionIndex) {
                 showStory();
             } else {
-                renderQuestion();
+                showQuestion();
             }
         }
 
-        // ===== SHOW STORIES =====
-        function showStory() {
-            const f = (text) => `<span class="filled-word">${text}</span>`;
-
-            if (currentRound === 1) {
-                const a = answers;
-                document.getElementById('story1Text').innerHTML = `
-                    I never expected my game to take place in ${f(a.place)}, but here we are! In this game, you play as a ${f(a.adjective1)} ${f(a.charName)}, and your main job is to defeat the Math Monster using ${f(a.mathTopic)}.<br><br>
-                    Things get interesting when the game suddenly becomes all about ${f(a.mathLove)}. Players have to use this math to solve ${f(a.bigNumber)} puzzles, or else they might not get very far. If players do well, they earn ${f(a.reward)}, which helps them keep playing.<br><br>
-                    Your trusty sidekick is a ${f(a.adjective2)} ${f(a.animal)} who shouts "${f(a.encourage)}" whenever you're ${f(a.verb)} through the levels. In the end, the whole point of the game is to make everyone go ${f(a.sound)}!
-                `;
-                showScreen('story1Screen');
-            } else if (currentRound === 2) {
-                const a = answers;
-                const r2 = round2Data;
-                document.getElementById('story2Text').innerHTML = `
-                    But wait! Things get trickier when ${f(r2.challenge)} appears! Players must ${f(r2.challengeDesc)} to keep going.<br><br>
-                    Luckily, there's a special ${f(r2.powerup)} that ${f(r2.powerupDesc)}. If you mess up, ${f(r2.failure)}, but don't worry - the game also has ${f(r2.bonus)} to make it more fun!<br><br>
-                    This challenge really makes players think about ${f(a.mathTopic)} in a whole new way!
-                `;
-                showScreen('story2Screen');
+        function applyTheme(place) {
+            const placeLower = place.toLowerCase();
+            
+            if (placeLower.includes('space') || placeLower.includes('station') || placeLower.includes('rocket')) {
+                currentTheme = 'space';
+            } else if (placeLower.includes('ocean') || placeLower.includes('water') || placeLower.includes('sea') || placeLower.includes('underwater')) {
+                currentTheme = 'ocean';
+            } else if (placeLower.includes('candy') || placeLower.includes('sweet') || placeLower.includes('sugar') || placeLower.includes('chocolate')) {
+                currentTheme = 'candy';
+            } else if (placeLower.includes('haunt') || placeLower.includes('ghost') || placeLower.includes('spook') || placeLower.includes('mansion')) {
+                currentTheme = 'haunted';
+            } else if (placeLower.includes('jungle') || placeLower.includes('forest') || placeLower.includes('wild') || placeLower.includes('safari')) {
+                currentTheme = 'jungle';
             } else {
-                const a = answers;
-                const r2 = round2Data;
-                const r3 = round3Data;
-                document.getElementById('story3Text').innerHTML = `
-                    Just when you thought it couldn't get crazier, "${f(r3.rule)}" becomes the new rule!<br><br>
-                    There's a shocking twist when ${f(r3.twist)}. Now, to actually win, players have to ${f(r3.winCondition)}!<br><br>
-                    Every time you get an answer right, ${f(r3.chaos)} happens everywhere! Plus, there's ${f(r3.wildElement)} that activates randomly.<br><br>
-                    And the ultimate secret feature? ${f(r3.megaBonus)}! This version is absolutely bonkers, but that's what makes it fun!
-                `;
-                showScreen('story3Screen');
+                currentTheme = 'space';
+            }
+
+            document.body.className = currentTheme;
+            createParticles();
+        }
+
+        function createParticles() {
+            document.querySelectorAll('.theme-particle').forEach(p => p.remove());
+            
+            if (!currentTheme) return;
+
+            const particles = themes[currentTheme].particles;
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'theme-particle';
+                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                document.body.appendChild(particle);
             }
         }
 
-        // ===== FINAL PROMPTS =====
+        function toggleSuggestions(id, category) {
+            const suggestionsDiv = document.getElementById(`suggestions-${id}`);
+            if (!suggestionsDiv) return;
+
+            if (suggestionsDiv.classList.contains('show')) {
+                suggestionsDiv.classList.remove('show');
+                return;
+            }
+
+            let suggestions = [];
+            const theme = themes[currentTheme] || themes.space;
+
+            if (category === 'place') {
+                suggestions = ['space station', 'underwater castle', 'candy factory', 'haunted mansion', 'jungle temple'];
+            } else if (category === 'adjective1' || category === 'adjective2') {
+                suggestions = theme.adjectives;
+            } else if (category === 'object1') {
+                suggestions = theme.objects;
+            } else if (category === 'animal') {
+                suggestions = theme.animals;
+            } else if (category === 'mathTopic1') {
+                suggestions = ['fractions', 'multiplication', 'division', 'decimals'];
+            } else if (category === 'mathTopic2') {
+                suggestions = ['addition', 'subtraction', 'patterns', 'geometry'];
+            } else if (category === 'feeling') {
+                suggestions = ['excited', 'nervous', 'confident', 'curious'];
+            } else if (category === 'number') {
+                suggestions = ['1,000,000', '9,999,999', '777,777', '5,000,000'];
+            } else if (category === 'reward') {
+                suggestions = ['pizza party', 'extra recess', 'homework pass', 'class trophy'];
+            } else if (category === 'sound') {
+                suggestions = theme.sounds;
+            } else if (category === 'encouragement') {
+                suggestions = ['You got this!', 'Keep going!', 'Never give up!', 'You\'re amazing!'];
+            } else if (category === 'character') {
+                suggestions = ['Captain Calculator', 'Math Master', 'Professor Plus', 'Number Ninja'];
+            } else if (category === 'verb') {
+                suggestions = ['calculating', 'solving', 'jumping', 'racing'];
+            } else if (theme[category]) {
+                suggestions = theme[category];
+            } else if (id === 'powerupHow') {
+                suggestions = ['Gives extra time', 'Shows hints', 'Doubles points', 'Protects from mistakes'];
+            } else if (id === 'wildElement') {
+                suggestions = ['Secret mode unlocks', 'Hidden power discovered', 'Everything changes color', 'Time slows down'];
+            }
+
+            suggestionsDiv.innerHTML = suggestions.map(s => 
+                `<span class="suggestion-item" onclick="selectSuggestion('${id}', '${s.replace(/'/g, "\\'")}')">${s}</span>`
+            ).join('');
+            suggestionsDiv.classList.add('show');
+        }
+
+        function selectSuggestion(id, value) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.value = value;
+                answers[id] = value;
+                
+                if (id === 'place') {
+                    applyTheme(value);
+                }
+            }
+            document.getElementById(`suggestions-${id}`).classList.remove('show');
+        }
+
+        function spinWheel(id, category) {
+            const wheel = document.getElementById(`wheel-${id}`);
+            const theme = themes[currentTheme] || themes.space;
+            const options = theme[category];
+            
+            const randomDegrees = Math.random() * 360 + 1440;
+            wheel.style.transform = `rotate(${randomDegrees}deg)`;
+            
+            setTimeout(() => {
+                const result = options[Math.floor(Math.random() * options.length)];
+                answers[id] = result;
+                const resultDiv = document.getElementById(`result-${id}`);
+                resultDiv.textContent = result;
+                resultDiv.classList.add('show');
+                
+                // Show Next button after spinning
+                document.getElementById('nextBtn').style.display = 'block';
+            }, 4000);
+        }
+
+        function generateRandom(id, category) {
+            const theme = themes[currentTheme] || themes.space;
+            const options = theme[category];
+            const result = options[Math.floor(Math.random() * options.length)];
+            
+            answers[id] = result;
+            const resultDiv = document.getElementById(`result-${id}`);
+            resultDiv.textContent = result;
+            resultDiv.classList.add('show');
+            
+            // Show Next button after generating
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function showStory() {
+            document.getElementById('question-screen').classList.add('hidden');
+            
+            if (currentRound === 1) {
+                const story = `I never expected my game to take place in <span class="story-word">${answers.place || 'adventure land'}</span>, but here we are. In this game, you play as a <span class="story-word">${answers.adjective1 || 'cool'}</span> <span class="story-word">${answers.animal || 'lion'}</span> named <span class="story-word">${answers.character || 'Hero'}</span>, and your main job is to use <span class="story-word">${answers.mathTopic1 || 'math'}</span> with a <span class="story-word">${answers.object1 || 'pencil'}</span>. Things get interesting when the game suddenly becomes all about <span class="story-word">${answers.mathTopic2 || 'numbers'}</span>. Players have to solve <span class="story-word">${answers.number || '100'}</span> problems, or else they might not get very far. If players do well, they earn <span class="story-word">${answers.reward || 'prizes'}</span>, which helps them keep playing. The whole experience feels <span class="story-word">${answers.adjective2 || 'great'}</span> and makes you feel <span class="story-word">${answers.feeling || 'happy'}</span>. Every time you succeed, you hear <span class="story-word">${answers.sound || 'YAY!'}</span>! When you're stuck, just remember: <span class="story-word">${answers.encouragement || 'Keep going!'}</span> Your character keeps <span class="story-word">${answers.verb || 'moving'}</span> forward!`;
+                
+                document.getElementById('story1').innerHTML = story;
+                document.getElementById('story1-display').classList.remove('hidden');
+            } else if (currentRound === 2) {
+                const story1Text = document.getElementById('story1').innerHTML;
+                const story = `${story1Text}<br><br>But wait! Things get trickier when <span class="story-word">${answers.challengeType || 'challenges'}</span> appear. Players must <span class="story-word">${answers.challengeWhat || 'work hard'}</span> to keep going. Luckily, there's a special <span class="story-word">${answers.powerup || 'power-up'}</span> that <span class="story-word">${answers.powerupHow || 'helps you succeed'}</span>. If you mess up, <span class="story-word">${answers.fail || 'you try again'}</span>, but don't worry - the game also has <span class="story-word">${answers.bonus || 'cool features'}</span> to make it more fun!`;
+                
+                document.getElementById('story2').innerHTML = story;
+                document.getElementById('story2-display').classList.remove('hidden');
+            } else if (currentRound === 3) {
+                const story2Text = document.getElementById('story2').innerHTML;
+                const story = `${story2Text}<br><br><span style="font-size: 1.4em; color: #ff6b6b;">🌟 ABSOLUTE MADNESS MODE! 🌟</span><br><br>Just when you thought it couldn't get crazier, <span class="story-word">${answers.rule || 'everything changes'}</span> becomes the new rule! There's a shocking twist when <span class="story-word">${answers.plotTwist || 'the unexpected happens'}</span>. Now, to actually win, players have to <span class="story-word">${answers.win || 'complete the mission'}</span>. Every time you get an answer right, <span class="story-word">${answers.chaosEvent || 'amazing things'}</span> happen everywhere. Plus, there's a secret <span class="story-word">${answers.wildElement || 'surprise feature'}</span> that activates randomly. And when you're really doing well, <span class="story-word">${answers.megaBonus || 'ultimate power'}</span> kicks in!`;
+                
+                document.getElementById('story3').innerHTML = story;
+                document.getElementById('story3-display').classList.remove('hidden');
+            }
+            
+            currentPage++;
+            updatePageIndicator();
+        }
+
+        function continueToRound2() {
+            document.getElementById('story1-display').classList.add('hidden');
+            document.getElementById('question-screen').classList.remove('hidden');
+            currentRound = 2;
+            currentPage++;
+            updatePageIndicator();
+            showQuestion();
+        }
+
+        function continueToRound3() {
+            document.getElementById('story2-display').classList.add('hidden');
+            document.getElementById('question-screen').classList.remove('hidden');
+            currentRound = 3;
+            currentPage++;
+            updatePageIndicator();
+            showQuestion();
+        }
+
         function showPrompts() {
-            const a = answers;
-            const r2 = round2Data;
-            const r3 = round3Data;
+            document.getElementById('story3-display').classList.add('hidden');
+            document.getElementById('final-prompts').classList.remove('hidden');
+            currentPage++;
+            updatePageIndicator();
+            
+            const prompt1 = `Create a game that takes place in ${answers.place || 'a fun location'} with a ${answers.adjective1 || 'cool'} ${answers.animal || 'animal'} named ${answers.character || 'Hero'} as the main character.
 
-            // Prompt 1 - Basic
-            document.getElementById('prompt1Text').textContent = `Create a math game that takes place in ${a.place} with a ${a.adjective1} ${a.charName} as the main character.
+Players use ${answers.mathTopic1 || 'math'} math with a ${answers.object1 || 'tool'}. To play, players must solve ${answers.number || '100'} problems.
 
-Players use ${a.mathTopic} math to defeat the Math Monster. To play, players must solve ${a.bigNumber} puzzles.
+When players do well, ${answers.reward || 'rewards'} happen.
 
-When players do well, ${a.reward} happens in the game.
+The goal is to make players feel ${answers.feeling || 'accomplished'} while ${answers.verb || 'playing'}. Include ${answers.mathTopic2 || 'math'} and use ${answers.sound || 'sound effects'}. Players get encouragement like "${answers.encouragement || 'Keep going!'}"
 
-The goal of the game is to make everyone go ${a.sound}!
+Make sure the game uses math as part of how players play and win. The experience should feel ${answers.adjective2 || 'exciting'}.`;
 
-Make sure the game uses math as part of how players play and win.`;
+            const prompt2 = prompt1 + `\n\nThe game includes a ${answers.challengeType || 'challenge'} challenge where ${answers.challengeWhat || 'players face obstacles'}. Players can use a ${answers.powerup || 'power-up'} that ${answers.powerupHow || 'helps them'}. If they fail, ${answers.fail || 'they try again'}. The game also has ${answers.bonus || 'special features'}.`;
 
-            // Prompt 2 - With Challenges
-            document.getElementById('prompt2Text').textContent = `Create a math game that takes place in ${a.place} with a ${a.adjective1} ${a.charName} as the main character.
+            const prompt3 = prompt2 + `\n\nThe game has a special rule: ${answers.rule || 'special mechanics'}. There's a plot twist where ${answers.plotTwist || 'something unexpected happens'}. When players get answers right, ${answers.chaosEvent || 'exciting things'} happen. There's a ${answers.wildElement || 'secret feature'}. When players excel, ${answers.megaBonus || 'ultimate rewards'} activate. The goal is to ${answers.win || 'complete the mission'}. This version should be extra fun and chaotic!`;
 
-Players use ${a.mathTopic} math to defeat the Math Monster. To play, players must solve ${a.bigNumber} puzzles.
-
-The game includes a ${r2.challenge} challenge where ${r2.challengeDesc}. Players can use a ${r2.powerup} power-up that ${r2.powerupDesc}. If they fail, ${r2.failure}.
-
-When players do well, ${a.reward} happens. The game also includes ${r2.bonus} feature.
-
-The goal is to make everyone go ${a.sound}!
-
-Make sure the game uses math as part of how players play and win.`;
-
-            // Prompt 3 - Full Chaos
-            document.getElementById('prompt3Text').textContent = `Create a math game that takes place in ${a.place} with a ${a.adjective1} ${a.charName} as the main character.
-
-Players use ${a.mathTopic} math to defeat the Math Monster. To play, players must solve ${a.bigNumber} puzzles.
-
-The game has a special rule: "${r3.rule}". There's a plot twist where ${r3.twist}.
-
-The game includes a ${r2.challenge} challenge where ${r2.challengeDesc}. Players can use a ${r2.powerup} that ${r2.powerupDesc}. If they fail, ${r2.failure}.
-
-When players get answers right, ${r3.chaos} happens! There's also ${r3.wildElement} and ${r3.megaBonus} features, plus ${r2.bonus}.
-
-The goal is to ${r3.winCondition}!
-
-Make sure the game uses math as part of how players play and win. This version should be extra fun and chaotic!`;
-
-            showScreen('promptsScreen');
+            document.getElementById('prompt1').textContent = prompt1;
+            document.getElementById('prompt2').textContent = prompt2;
+            document.getElementById('prompt3').textContent = prompt3;
         }
 
         function copyPrompt(num) {
-            const text = document.getElementById('prompt' + num + 'Text').textContent;
+            const text = document.getElementById(`prompt${num}`).textContent;
             navigator.clipboard.writeText(text).then(() => {
-                document.getElementById('copy' + num).textContent = '✓ Copied!';
-                setTimeout(() => { document.getElementById('copy' + num).textContent = ''; }, 2000);
+                alert(`Prompt ${num} copied! 📋 Paste it into Lovable.ai or Google Docs!`);
             });
         }
 
         function downloadPrompts() {
-            const prompt1 = document.getElementById('prompt1Text').textContent;
-            const prompt2 = document.getElementById('prompt2Text').textContent;
-            const prompt3 = document.getElementById('prompt3Text').textContent;
-
-            const content = `=== MY MATH GAME PROMPTS ===
-
-=== PROMPT 1: The Basic Game ===
-${prompt1}
-
-=== PROMPT 2: With Challenges ===
-${prompt2}
-
-=== PROMPT 3: Full Chaos Mode ===
-${prompt3}
-
----
-Created with Math Game Mad Libs!
-Paste these into Lovable.dev to build your game!`;
-
+            const content = `MATH MAD LIBS - YOUR THREE GAME PROMPTS!\n\n` +
+                `═══════════════════════════════════\n` +
+                `PROMPT 1: THE BASIC GAME\n` +
+                `═══════════════════════════════════\n\n${document.getElementById('prompt1').textContent}\n\n\n` +
+                `═══════════════════════════════════\n` +
+                `PROMPT 2: WITH CHALLENGES\n` +
+                `═══════════════════════════════════\n\n${document.getElementById('prompt2').textContent}\n\n\n` +
+                `═══════════════════════════════════\n` +
+                `PROMPT 3: FULL CHAOS MODE\n` +
+                `═══════════════════════════════════\n\n${document.getElementById('prompt3').textContent}`;
+            
             const blob = new Blob([content], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'my-math-game-prompts.txt';
-            link.click();
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'math-mad-libs-prompts.txt';
+            a.click();
+            URL.revokeObjectURL(url);
         }
+
+        updatePageIndicator();
     </script>
 </body>
 </html>
