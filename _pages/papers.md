@@ -9,20 +9,23 @@ author_profile: true
 - [Refereed Conference Proceeding Papers](#refereed-conference-proceeding-papers)
 - [Book Chapters](#book-chapters)
 
-### **Submitted/Under Revision**
+\* indicates equal contribution
 
-**Asaba, M.**, Zhang, M., & Leonard, J.A. (in prep). Children expect adults to hold gender stereotypes about interest, even when they are not accurate.
+### **Under Revision**
 
-**Asaba, M.**, Stegall, J., Hembacher, E., Frank, M.C., & Gweon, H. (under review). Young children infer the informativeness of praise. 
+**Asaba, M.**, Zhang, M., & Leonard, J.A. (under revision, *Communications Psychology*). U.S. children expect and approve of teachers' gender stereotypes about academic interest.
 
-**Asaba, M.**\*, Wu, Y.\*, Carrillo, B., & Gweon, H. (under revision). Inferring competence from emotional responses to performance outcomes. 
-
-**Asaba, M.**\*, Davis, I.\*, Leonard, J., & Jara-Ettinger, J. (under revision). Detecting social biases using mental state inference.
 ### **Peer-Reviewed Journal Articles**
 
-**Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (accepted). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain. *Developmental Psychology.*
+**Asaba, M.**, Stegall, J., Hembacher, E., Frank, M.C., & Gweon, H. (2025). Young children infer the informativeness of praise. *Developmental Psychology.*
 
-Shachnai, R., **Asaba, M.**, Hu, L., & Leonard, J. (2024). Pointing out learning opportunities reduces over-parenting. *Child Development.* Advance online publication. [https://doi.org/10.1111/cdev.14198](https://doi.org/10.1111/cdev.14198)
+**Asaba, M.**\*, Wu, Y.\*, Carrillo, B., & Gweon, H. (2025). When Success Is Surprising: Children's Ability to Use Surprise to Infer Competence. *Open Mind*, 9, 825-843.
+
+**Asaba, M.**\*, Davis, I.\*, Leonard, J., & Jara-Ettinger, J. (2025). Detecting social biases using mental state inference. *Journal of Personality and Social Psychology*, 129(4), 649-667.
+
+**Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (2025). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain. *Developmental Psychology*, 61(9), 1793-1807.
+
+Shachnai, R., **Asaba, M.**, Hu, L., & Leonard, J. (2025). Pointing out learning opportunities reduces over-parenting. *Child Development*, 96(2), 679-690.
 
 **Asaba, M.** & Gweon, H. (2022). Young children infer and manage what others think about them. *Proceedings of the National Academy of Sciences*, 119(32), e2105642119. [https://doi.org/10.1073/pnas.2105642119](https://doi.org/10.1073/pnas.2105642119)
 
@@ -38,7 +41,7 @@ Gweon, H., & **Asaba, M.** (2018). Order matters: Children's evaluation of under
 
 Koster-Hale, J., Richardson, H., Velez-Alicea, N., **Asaba, M.**, Young, L., & Saxe, R. (2017). Mentalizing regions represent distributed, continuous, and abstract dimensions of others' beliefs. *NeuroImage*, 161, 9-18. [https://doi.org/10.1016/j.neuroimage.2017.08.026](https://doi.org/10.1016/j.neuroimage.2017.08.026)
 
-### **REFEREED CONFERENCE PROCEEDING PAPERS**
+### **Refereed Conference Proceeding Papers**
 
 **Asaba, M.**, Zhang, M., & Leonard, J.A. (2024). Children expect adults to hold gender stereotypes, even when they are not accurate. *Proceedings of the 46th Annual Conference of the Cognitive Science Society.* [https://escholarship.org/uc/item/7q01r7sx](https://escholarship.org/uc/item/7q01r7sx)
 
@@ -50,7 +53,7 @@ Carrillo, B., **Asaba, M.**, Lozano, L., Okine, L., Leonard, J. (2024). Young ch
 
 Wu\*, Y., Tessler\*, M. H., **Asaba, M.**, Zhu, P., Gweon, H., & Frank, M. C. (2021). Integrating emotional expressions with utterances in pragmatic inference. *Proceedings of the 43rd Annual Conference of the Cognitive Science Society.* [https://escholarship.org/uc/item/1tw571n6](https://escholarship.org/uc/item/1tw571n6)
 
-Ong, D., **Asaba, M.**, Lim, H. Y., Chen, P., & Gweon, H. (2021). "If only Santa had one more present”: Exploring the development of near-miss counterfactual reasoning. *Proceedings of the 43rd Annual Conference of the Cognitive Science Society.* [https://escholarship.org/uc/item/9jd3r25t](https://escholarship.org/uc/item/9jd3r25t)
+Ong, D., **Asaba, M.**, Lim, H. Y., Chen, P., & Gweon, H. (2021). "If only Santa had one more present": Exploring the development of near-miss counterfactual reasoning. *Proceedings of the 43rd Annual Conference of the Cognitive Science Society.* [https://escholarship.org/uc/item/9jd3r25t](https://escholarship.org/uc/item/9jd3r25t)
 
 **Asaba, M.**\*, Wu, Y.\*, Carrillo, B., & Gweon, H. (2020). You're surprised at her success? Inferring competence from emotional responses to performance outcomes. *Proceedings of the 42nd Annual Conference of the Cognitive Science Society.* [https://escholarship.org/uc/item/32p081mj](https://escholarship.org/uc/item/32p081mj)
 
@@ -72,6 +75,6 @@ Ong, D., **Asaba, M.**, & Gweon, H. (2016). Young children and adults integrate 
 
 Gweon, H. & **Asaba, M.** (2015). Knowing what he could have shown: The role of alternatives in children's evaluation of under-informative teachers. *Proceedings of the 37th Annual Conference of the Cognitive Science Society.* [https://escholarship.org/uc/item/59n5z8fv](https://escholarship.org/uc/item/59n5z8fv)
 
-### **BOOK CHAPTERS**
+### **Book Chapters**
 
 **Asaba, M.** & Gweon, H. (2020). Learning about others to learn about the self: Early reasoning about the informativeness of others' praise. In E. Brummelman (Ed.), *Current Issues in Social Psychology: Psychology of Praise.* Routledge.
