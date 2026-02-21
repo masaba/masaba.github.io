@@ -23,6 +23,7 @@ main:
     
   - title: "CV"
     url: /../files/asaba_cv.pdf
+    new_tab: true
 
     
  # - title: "Guide"
