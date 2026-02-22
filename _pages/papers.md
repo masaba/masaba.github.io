@@ -17,13 +17,13 @@ author_profile: true
 
 ### **Peer-Reviewed Journal Articles**
 
-**Asaba, M.**, Stegall, J., Hembacher, E., Frank, M.C., & Gweon, H. (2025). Young children infer the informativeness of praise. *Developmental Psychology.*
+**Asaba, M.**, Stegall, J., Hembacher, E., Frank, M.C., & Gweon, H. (2025). Young children infer the informativeness of praise. *Developmental Psychology*. [https://doi.org/10.1037/dev0002073](https://doi.org/10.1037/dev0002073)
 
-**Asaba, M.**\*, Wu, Y.\*, Carrillo, B., & Gweon, H. (2025). When Success Is Surprising: Children's Ability to Use Surprise to Infer Competence. *Open Mind*, 9, 825-843.
+**Asaba, M.**\*, Wu, Y.\*, Carrillo, B., & Gweon, H. (2025). When Success Is Surprising: Children's Ability to Use Surprise to Infer Competence. *Open Mind*, 9, 825-843. [https://doi.org/10.1162/opmi.a.2](https://doi.org/10.1162/opmi.a.2)
 
-**Asaba, M.**\*, Davis, I.\*, Leonard, J., & Jara-Ettinger, J. (2025). Detecting social biases using mental state inference. *Journal of Personality and Social Psychology*, 129(4), 649-667.
+**Asaba, M.**\*, Davis, I.\*, Leonard, J., & Jara-Ettinger, J. (2025). Detecting social biases using mental state inference. *Journal of Personality and Social Psychology*, 129(4), 649-667. [https://doi.org/10.1037/pspa0000451](https://doi.org/10.1037/pspa0000451)
 
-**Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (2025). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain. *Developmental Psychology*, 61(9), 1793-1807.
+**Asaba, M.**, Santos, M., Jara-Ettinger, J., & Leonard, J. (2025). Adolescents are most motivated by encouragement from someone who knows their abilities and the domain. *Developmental Psychology*, 61(9), 1793-1807. [https://doi.org/10.1037/dev0001920](https://doi.org/10.1037/dev0001920)
 
 Shachnai, R., **Asaba, M.**, Hu, L., & Leonard, J. (2025). Pointing out learning opportunities reduces over-parenting. *Child Development*, 96(2), 679-690.
 
