@@ -4,7 +4,7 @@ title: "Research"
 permalink: /research/
 author_profile: true
 ---
-My current research interests concern the social environment that supports children and students in educational contexts. For example, [whose encouragement do students find motivating?](#1-whose-encouragement-do-students-find-motivating) [How do students decide what to communicate about their abilities?](#2-how-do-students-decide-what-to-communicate-about-their-abilities) [Do students expect their teachers to have gender stereotypes?](#3-do-students-expect-their-teachers-to-have-gender-stereotypes)
+My research interests concern (i) the social environment that supports children and students in educational contexts, and (ii) the cognitive capacities that support learning. I have conducted research with infants, toddlers, preschool-aged children, elementary school students, and adolescents. For example, [whose encouragement do students find motivating?](#1-whose-encouragement-do-students-find-motivating) [How do students decide what to communicate about their abilities?](#2-how-do-students-decide-what-to-communicate-about-their-abilities) [Do students expect their teachers to have gender stereotypes?](#3-do-students-expect-their-teachers-to-have-gender-stereotypes)
 
 ## 1. Whose encouragement do students find motivating?
 

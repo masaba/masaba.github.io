@@ -3,7 +3,10 @@ main:
  # - title: "Publications"
  #   url: /publications/
     
-  - title: "Research Portfolio"
+  - title: "Tangle & Thrive"
+    url: /tangle-thrive/
+
+  - title: "Academic Research Portfolio"
     url: /research/
 
   - title: "Papers"
